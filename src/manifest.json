@@ -1,6 +1,6 @@
 {
   "name": "",
-  "appid": "",
+  "appid": "wx694ac87c682ddfcb",
   "description": "",
   "versionName": "1.0.0",
   "versionCode": "100",
@@ -47,7 +47,7 @@
   },
   "quickapp": {},
   "mp-weixin": {
-    "appid": "",
+    "appid": "wx694ac87c682ddfcb",
     "setting": {
       "urlCheck": false
     },
