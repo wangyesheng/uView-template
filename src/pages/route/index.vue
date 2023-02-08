@@ -6,7 +6,7 @@
 export default {
   data() {
     return {
-      title: "我的",
+      title: "路线查询",
     };
   },
   onLoad() {},
