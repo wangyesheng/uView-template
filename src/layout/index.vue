@@ -1,14 +1,18 @@
 <style lang="scss" scoped>
 .layout-wrap {
+  position: relative;
   width: 100%;
-  background: #f7f9fb;
-  padding: 0 30rpx;
-  box-sizing: border-box;
 }
 </style>
 
 <template>
-  <div class="layout-wrap" :style="{ minHeight: sysHeight + 'px' }">
+  <div
+    class="layout-wrap"
+    :style="{
+      minHeight: sysHeight + 'px',
+      background: background,
+    }"
+  >
     <slot />
     <Tabbar />
   </div>
@@ -16,8 +20,16 @@
 
 <script>
 import Tabbar from "../components/Tabbar";
+
 export default {
   name: "layout",
+
+  props: {
+    background: {
+      type: String,
+      default: "#f7f9fb",
+    },
+  },
 
   components: {
     Tabbar,
