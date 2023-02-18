@@ -128,6 +128,45 @@
     }
   }
 }
+
+::v-deep {
+  .u-mode-center-box {
+    width: 80vw !important;
+    margin: 0 auto;
+    border-radius: 20rpx;
+    padding: 40rpx;
+    box-sizing: border-box;
+
+    .btn-mobile-inner {
+      display: flex;
+      align-items: center;
+    }
+
+    .title {
+      font-size: 32rpx;
+      margin-bottom: 30rpx;
+      text-align: center;
+      color: #666;
+      font-weight: 500;
+    }
+    .tips {
+      color: #6b6b6b;
+      font-size: 30rpx;
+      font-weight: 500;
+      margin-bottom: 50rpx;
+    }
+
+    .u-btn--success {
+      img {
+        width: 48rpx;
+        height: 48rpx;
+      }
+      span {
+        margin-left: 20rpx;
+      }
+    }
+  }
+}
 </style>
 
 <template>
@@ -166,6 +205,7 @@
             class="order-form-item"
             v-for="item in orderFormItems"
             :key="item.key"
+            @click="onFormItemClick(item)"
           >
             <div class="left">
               <img
@@ -182,12 +222,21 @@
               </span>
             </div>
             <u-icon
-              name="arrow-down-fill"
               color="#000"
+              name="arrow-down-fill"
               :custom-style="{ width: '32rpx', height: '16rpx' }"
             />
           </div>
         </div>
+        <!-- <u-button
+          type="primary"
+          shape="circle"
+          open-type="getPhoneNumber"
+          @getphonenumber="onGetPhoneNumber"
+          v-if="!appUser.id"
+        >
+          立即预约
+        </u-button> -->
         <u-button
           type="primary"
           shape="circle"
@@ -202,11 +251,33 @@
         </u-button>
       </div>
     </div>
+    <Popup v-model="hotelPopup.visible" @getData="getHotelData" />
+
+    <u-popup v-model="applyMobileModal.visible" mode="center">
+      <div class="title">提示：</div>
+      <div class="tips">为更好的向您提供服务，申请获取您的手机号！</div>
+      <u-button
+        shape="circle"
+        type="success"
+        open-type="getPhoneNumber"
+        @getphonenumber="onGetPhoneNumber"
+      >
+        <div class="btn-mobile-inner">
+          <img src="../../static/images/home/icon-wechat.png" alt="" />
+          <span>获取手机号</span>
+        </div>
+      </u-button>
+    </u-popup>
   </app-layout>
 </template>
 
 <script>
+import Popup from "@/components/Popup";
+import loginMixin from "@/mixins/login";
+
 export default {
+  name: "Home",
+
   data() {
     const appUser = uni.getStorageSync("APP_USER") || {};
     return {
@@ -215,7 +286,7 @@ export default {
       searchKey: "",
       orderFormItems: [
         {
-          key: "store",
+          key: "hotel",
           label: "选择免税店",
         },
         {
@@ -231,16 +302,44 @@ export default {
           label: "选择预约人数",
         },
       ],
+      hotelPopup: {
+        visible: false,
+        currentHotel: {},
+      },
+      applyMobileModal: {
+        visible: false,
+      },
     };
   },
+
+  mixins: [loginMixin],
+
+  components: {
+    Popup,
+  },
+
   methods: {
     onSerchByKey() {
       console.log(this.searchKey);
     },
+    onLogin() {
+      this.login((result) => {
+        this.applyMobileModal.visible = true;
+      });
+    },
+    onFormItemClick(scope) {
+      const popupName = `${scope.key}Popup`;
+      this[popupName] && (this[popupName].visible = true);
+    },
+    getHotelData(hotel) {
+      this.hotelPopup.currentHotel = hotel;
+    },
+    onGetPhoneNumber(e) {
+      console.log(e);
+    },
     onOrderSubmit() {},
-    onLogin() {},
   },
-  onLoad() {
+  async onLoad() {
     uni.getSystemInfo({
       success: () => {
         this.menuButtonInfo = uni.getMenuButtonBoundingClientRect();

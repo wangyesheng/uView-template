@@ -4,9 +4,9 @@
   },
   "pages": [
     {
-      "path": "pages/me/index",
+      "path": "pages/home/index",
       "style": {
-        "navigationBarTitleText": "我的",
+        "navigationBarTitleText": "首页",
         "navigationStyle": "custom"
       }
     },
@@ -17,16 +17,28 @@
       }
     },
     {
-      "path": "pages/home/index",
-      "style": {
-        "navigationBarTitleText": "首页",
-        "navigationStyle": "custom"
-      }
-    },
-    {
       "path": "pages/me/setting",
       "style": {
         "navigationBarTitleText": "设置"
+      }
+    },
+    {
+      "path": "pages/opinion/index",
+      "style": {
+        "navigationBarTitleText": "意见反馈"
+      }
+    },
+    {
+      "path": "pages/opinion/me",
+      "style": {
+        "navigationBarTitleText": "我的反馈"
+      }
+    },
+    {
+      "path": "pages/me/index",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "navigationStyle": "custom"
       }
     }
   ],

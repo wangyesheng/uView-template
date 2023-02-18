@@ -75,10 +75,10 @@
 
 <template>
   <app-layout background="#f9f9fd">
-    <div class="store">
+    <div class="store" @click="hotelPopupVisible = true">
       <div class="store-inner">
         <div class="left">
-          <img src="../../static/images/home/icon-store.png" alt="" />
+          <img src="../../static/images/home/icon-hotel.png" alt="" />
           <span> 选择免税店 </span>
         </div>
         <u-icon
@@ -100,20 +100,23 @@
         </u-time-line-item>
       </u-time-line>
     </div>
+
+    <Popup v-model="hotelPopupVisible" />
   </app-layout>
 </template>
 
 <script>
+import Popup from "@/components/Popup";
+
 export default {
   data() {
-    return {};
+    return {
+      hotelPopupVisible: false,
+    };
   },
 
-  computed: {
-    sysHeight() {
-      console.log(this.getSysHeight());
-      return this.getSysHeight();
-    },
+  components: {
+    Popup,
   },
 
   onLoad() {},

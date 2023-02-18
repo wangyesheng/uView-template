@@ -18,10 +18,16 @@
       margin-bottom: 68rpx;
 
       .avatar {
+        margin: 0;
+        padding: 0;
         width: 136rpx;
         height: 136rpx;
         border-radius: 50%;
-        background: #fff;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        &::after {
+          border: none;
+        }
       }
 
       .right {
@@ -47,6 +53,35 @@
           text-align: center;
           line-height: 28rpx;
         }
+      }
+    }
+
+    .noLoginUser {
+      width: 50vw;
+      margin: 100rpx auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .avatar-wrap {
+        width: 180rpx;
+        height: 180rpx;
+        background: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20rpx;
+
+        img {
+          width: 100rpx;
+          height: 100rpx;
+        }
+      }
+
+      span {
+        font-size: 32rpx;
+        font-weight: 550;
+        color: #666;
       }
     }
   }
@@ -246,52 +281,82 @@
       }"
     >
       <div class="content-inner">
-        <div class="user">
-          <div class="avatar" />
+        <div class="user" v-if="appUser.avatarUrl">
+          <button
+            class="avatar"
+            open-type="chooseAvatar"
+            :style="{
+              backgroundImage: `url(${appUser.avatarUrl})`,
+            }"
+            @chooseavatar="onChooseAvatar"
+          />
           <div class="right">
             <span class="mobile">188928938</span>
             <div class="role">游客</div>
           </div>
         </div>
-        <div class="my-order">
-          <div class="my-order-header">
-            <div class="left">
-              <img :src="require('@/static/images/me/icon-order.png')" alt="" />
-              <span>我的预约</span>
-            </div>
-            <div class="right">
-              <span>历史预约</span>
-              <u-icon name="arrow-right" color="#868686" />
-            </div>
+
+        <div
+          class="noLoginUser"
+          v-else
+          open-type="getUserInfo"
+          @click="onLogin"
+        >
+          <div class="avatar-wrap">
+            <img src="../../static/images/me/noLoginUser.png" alt="" />
           </div>
-          <!-- <div>
-            <div class="my-order-content">
-              <div class="layer">
-                <span class="label">酒店：</span>
-                <span class="value">无锡希尔顿五星级大酒店</span>
+          <span>请登录</span>
+        </div>
+
+        <template v-if="appUser.avatarUrl">
+          <div class="my-order">
+            <div class="my-order-header">
+              <div class="left">
+                <img
+                  :src="require('@/static/images/me/icon-order.png')"
+                  alt=""
+                />
+                <span>我的预约</span>
               </div>
-              <div class="layer">
-                <span class="label">班次：</span>
-                <span class="value">708 大巴车</span>
-              </div>
-              <div class="layer">
-                <span class="label">时间：</span>
-                <span class="value">2022-12-23 12:34</span>
-              </div>
-            </div>
-            <div class="my-order-footer">
-              <div class="action">
-                <u-button shape="circle">取消预约</u-button>
-                <u-button shape="circle" type="primary">修改</u-button>
+              <div class="right">
+                <span>历史预约</span>
+                <u-icon name="arrow-right" color="#868686" />
               </div>
             </div>
-            <div class="my-order-status">等待中...</div>
-          </div> -->
-          <div class="no-data">
+            <template>
+              <div class="my-order-content">
+                <div class="layer">
+                  <span class="label">酒店：</span>
+                  <span class="value">无锡希尔顿五星级大酒店</span>
+                </div>
+                <div class="layer">
+                  <span class="label">班次：</span>
+                  <span class="value">708 大巴车</span>
+                </div>
+                <div class="layer">
+                  <span class="label">时间：</span>
+                  <span class="value">2022-12-23 12:34</span>
+                </div>
+              </div>
+              <div class="my-order-footer">
+                <div class="action">
+                  <u-button shape="circle">取消预约</u-button>
+                  <u-button shape="circle" type="primary">修改</u-button>
+                </div>
+              </div>
+              <div class="my-order-status">等待中...</div>
+            </template>
+            <!-- <div class="no-data">
             <img src="../../static/images/me/icon-no-data.png" alt="" />
             <span>暂无预约...</span>
+          </div> -->
           </div>
-        </div>
+        </template>
+        <!--   <div class="no-data">
+          <img src="../../static/images/me/icon-no-data.png" alt="" />
+          <span>暂无预约...</span>
+        </div>-->
+
         <div class="functions">
           <div class="title">常用功能</div>
           <div class="cell-wrap">
@@ -320,9 +385,13 @@
 </template>
 
 <script>
+import loginMixin from "@/mixins/login";
+
 export default {
   data() {
+    const appUser = this.getAppUser();
     return {
+      appUser,
       functions: [
         {
           icon: "opinion",
@@ -337,8 +406,11 @@ export default {
           label: "设置",
         },
       ],
+      avatarUrl: "",
     };
   },
+
+  mixins: [loginMixin],
 
   computed: {
     menuButtonInfo() {
@@ -352,10 +424,26 @@ export default {
         case "setting":
           this.navTo("/pages/me/setting");
           break;
-
+        case "opinion":
+          this.navTo("/pages/opinion/index");
+          break;
         default:
           break;
       }
+    },
+    onChooseAvatar(e) {
+      const {
+        detail: { avatarUrl },
+      } = e;
+      this.appUser.avatarUrl =
+        "data:image/jpeg;base64," +
+        uni.getFileSystemManager().readFileSync(avatarUrl, "base64");
+    },
+    onLogin() {
+      this.login((result) => {
+        this.appUser = result.userInfo;
+        console.log(this.appUser);
+      });
     },
   },
 
