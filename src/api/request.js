@@ -10,7 +10,7 @@ const request = async ({ url, method, payload = {} }) => {
       // http 网络请求报错
       errerData = error.data;
     } else {
-      // 自定义接口请求报错
+      // 后台接口请求报错
     }
     Vue.prototype.$u.toast(errerData.msg);
   }

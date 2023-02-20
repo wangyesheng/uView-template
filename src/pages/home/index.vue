@@ -128,45 +128,6 @@
     }
   }
 }
-
-::v-deep {
-  .u-mode-center-box {
-    width: 80vw !important;
-    margin: 0 auto;
-    border-radius: 20rpx;
-    padding: 40rpx;
-    box-sizing: border-box;
-
-    .btn-mobile-inner {
-      display: flex;
-      align-items: center;
-    }
-
-    .title {
-      font-size: 32rpx;
-      margin-bottom: 30rpx;
-      text-align: center;
-      color: #666;
-      font-weight: 500;
-    }
-    .tips {
-      color: #6b6b6b;
-      font-size: 30rpx;
-      font-weight: 500;
-      margin-bottom: 50rpx;
-    }
-
-    .u-btn--success {
-      img {
-        width: 48rpx;
-        height: 48rpx;
-      }
-      span {
-        margin-left: 20rpx;
-      }
-    }
-  }
-}
 </style>
 
 <template>
@@ -228,62 +189,59 @@
             />
           </div>
         </div>
-        <!-- <u-button
-          type="primary"
-          shape="circle"
-          open-type="getPhoneNumber"
-          @getphonenumber="onGetPhoneNumber"
-          v-if="!appUser.id"
-        >
-          立即预约
-        </u-button> -->
         <u-button
           type="primary"
           shape="circle"
           open-type="getUserInfo"
-          @click="onLogin"
+          @click="login"
           v-if="!appUser.id"
         >
-          立即预约
+          立即登录
         </u-button>
         <u-button type="primary" shape="circle" v-else @click="onOrderSubmit">
           立即预约
         </u-button>
       </div>
     </div>
-    <Popup v-model="hotelPopup.visible" @getData="getHotelData" />
+    <Popup
+      v-model="hotelPopup.visible"
+      :dataSource="hotelPopup.data"
+      @getData="getCurrentHotelData"
+    />
+    <!-- <Popup
+      v-model="storePopup.visible"
+      :dataSource="storePopup.data"
+      @getData="getCurrentStoreData"
+    /> -->
 
-    <u-popup v-model="applyMobileModal.visible" mode="center">
-      <div class="title">提示：</div>
-      <div class="tips">为更好的向您提供服务，申请获取您的手机号！</div>
-      <u-button
-        shape="circle"
-        type="success"
-        open-type="getPhoneNumber"
-        @getphonenumber="onGetPhoneNumber"
-      >
-        <div class="btn-mobile-inner">
-          <img src="../../static/images/home/icon-wechat.png" alt="" />
-          <span>获取手机号</span>
-        </div>
-      </u-button>
-    </u-popup>
+    <BindMobile
+      v-model="bindMobileModal.visible"
+      :userProfile="bindMobileModal.userProfile"
+      @getUser="getUserHandler"
+    />
   </app-layout>
 </template>
 
 <script>
 import Popup from "@/components/Popup";
+import BindMobile from "@/components/BindMobile";
 import loginMixin from "@/mixins/login";
+import { getHotelsRes, getPointsRes } from "@/api";
 
 export default {
   name: "Home",
 
+  mixins: [loginMixin],
+
+  components: {
+    Popup,
+    BindMobile,
+  },
+
   data() {
-    const appUser = uni.getStorageSync("APP_USER") || {};
     return {
-      appUser,
-      menuButtonInfo: {},
       searchKey: "",
+      menuButtonInfo: {},
       orderFormItems: [
         {
           key: "hotel",
@@ -304,47 +262,55 @@ export default {
       ],
       hotelPopup: {
         visible: false,
+        data: [],
         currentHotel: {},
       },
-      applyMobileModal: {
+      storePopup: {
         visible: false,
+        data: [],
+        currentStore: {},
       },
     };
-  },
-
-  mixins: [loginMixin],
-
-  components: {
-    Popup,
   },
 
   methods: {
     onSerchByKey() {
       console.log(this.searchKey);
     },
-    onLogin() {
-      this.login((result) => {
-        this.applyMobileModal.visible = true;
-      });
+    onFormItemClick({ key }) {
+      if (key === "hotel") {
+        this.storePopup.visible = true;
+      } else if (key === "station") {
+        this.hotelPopup.visible = true;
+      }
     },
-    onFormItemClick(scope) {
-      const popupName = `${scope.key}Popup`;
-      this[popupName] && (this[popupName].visible = true);
-    },
-    getHotelData(hotel) {
+    getCurrentHotelData(hotel) {
       this.hotelPopup.currentHotel = hotel;
     },
-    onGetPhoneNumber(e) {
-      console.log(e);
+    getCurrentStoreData(store) {
+      this.storePopup.currentStore = store;
     },
-    onOrderSubmit() {},
+    async getStores() {
+      const data = await getPointsRes();
+      this.storePopup.data = data;
+    },
+    async getHotels() {
+      const data = await getHotelsRes();
+      this.hotelPopup.data = data;
+    },
+    onOrderSubmit() {
+      console.log(111);
+    },
   },
-  async onLoad() {
+
+  onLoad() {
     uni.getSystemInfo({
       success: () => {
         this.menuButtonInfo = uni.getMenuButtonBoundingClientRect();
       },
     });
+    this.getHotels();
+    this.getStores();
   },
 };
 </script>

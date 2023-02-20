@@ -1,10 +1,10 @@
 <style lang="scss" scoped>
-.hotel-wrap {
+._wrap {
   height: 68vh;
   padding: 40rpx 20rpx;
   box-sizing: border-box;
   background: #f9f9fd;
-  .pois-layer {
+  ._layer {
     &.active {
       border: 2rpx solid #158edc;
     }
@@ -57,11 +57,11 @@
     :value="value"
     @close="$emit('input', false)"
   >
-    <div class="hotel-wrap">
+    <div class="_wrap">
       <div
-        v-for="(item, index) in hotels"
+        v-for="(item, index) in dataSource"
         :key="item.id"
-        :class="['pois-layer', activeHotelId == item.id ? 'active' : '']"
+        :class="['_layer', activeId == item.id ? 'active' : '']"
         @click="onHotelItemClick(index)"
       >
         <div class="left">
@@ -79,8 +79,6 @@
 </template>
 
 <script>
-import { getHotelsRes } from "@/api";
-
 export default {
   name: "Popup",
 
@@ -89,32 +87,25 @@ export default {
       type: Boolean,
       default: false,
     },
+    dataSource: {
+      type: Array,
+      default: () => [],
+    },
   },
 
   data() {
     return {
-      hotels: [],
-      activeHotelId: -1,
-      activeHotelName: "",
+      activeId: -1,
     };
   },
 
   methods: {
-    async getHotels() {
-      const data = await getHotelsRes();
-      this.hotels = data;
-    },
     onHotelItemClick(index) {
-      const hotel = this.hotels[index];
-      this.activeHotelId = hotel.id;
-      this.activeHotelName = hotel.name;
-      this.$emit("getData", hotel);
+      const scope = this.dataSource[index];
+      this.activeId = scope.id;
+      this.$emit("getData", scope);
       this.$emit("input", false);
     },
-  },
-
-  mounted() {
-    this.getHotels();
   },
 };
 </script>

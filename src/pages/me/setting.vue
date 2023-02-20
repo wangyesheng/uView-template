@@ -59,7 +59,7 @@
   <div class="setting-wrap">
     <div class="setting-inner">
       <div class="cell-group">
-        <div
+        <!-- <div
           class="cell"
           hover-class="cell-hover"
           hover-stay-time="150"
@@ -76,7 +76,7 @@
         >
           <span>注销账户</span>
           <u-icon name="arrow-right" color="#D8DBDC" />
-        </div>
+        </div> -->
         <div
           class="cell"
           hover-class="cell-hover"
@@ -107,7 +107,7 @@
       </div>
     </div>
 
-    <u-button shape="circle">退出登录</u-button>
+    <u-button shape="circle" @click="onLogout">退出登录</u-button>
   </div>
 </template>
 
@@ -121,6 +121,12 @@ export default {
 
   methods: {
     onCellClick() {},
+    onLogout() {
+      uni.setStorageSync("APP_USER", {});
+      uni.switchTab({
+        url: "/pages/home/index",
+      });
+    },
   },
 };
 </script>

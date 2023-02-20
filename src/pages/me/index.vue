@@ -281,34 +281,29 @@
       }"
     >
       <div class="content-inner">
-        <div class="user" v-if="appUser.avatarUrl">
+        <div class="user" v-if="appUser.id">
           <button
             class="avatar"
             open-type="chooseAvatar"
             :style="{
-              backgroundImage: `url(${appUser.avatarUrl})`,
+              backgroundImage: `url(${appUser.avatar})`,
             }"
             @chooseavatar="onChooseAvatar"
           />
           <div class="right">
-            <span class="mobile">188928938</span>
+            <span class="mobile">{{ appUser.mobile }}</span>
             <div class="role">游客</div>
           </div>
         </div>
 
-        <div
-          class="noLoginUser"
-          v-else
-          open-type="getUserInfo"
-          @click="onLogin"
-        >
+        <div v-else class="noLoginUser" open-type="getUserInfo" @click="login">
           <div class="avatar-wrap">
             <img src="../../static/images/me/noLoginUser.png" alt="" />
           </div>
           <span>请登录</span>
         </div>
 
-        <template v-if="appUser.avatarUrl">
+        <template v-if="appUser.id">
           <div class="my-order">
             <div class="my-order-header">
               <div class="left">
@@ -380,18 +375,30 @@
           </div>
         </div>
       </div>
+      <BindMobile
+        v-model="bindMobileModal.visible"
+        :userProfile="bindMobileModal.userProfile"
+        @getUser="getUserHandler"
+      />
     </div>
   </app-layout>
 </template>
 
 <script>
+import BindMobile from "@/components/BindMobile";
 import loginMixin from "@/mixins/login";
 
 export default {
+  name: "Me",
+
+  components: {
+    BindMobile,
+  },
+
+  mixins: [loginMixin],
+
   data() {
-    const appUser = this.getAppUser();
     return {
-      appUser,
       functions: [
         {
           icon: "opinion",
@@ -406,11 +413,8 @@ export default {
           label: "设置",
         },
       ],
-      avatarUrl: "",
     };
   },
-
-  mixins: [loginMixin],
 
   computed: {
     menuButtonInfo() {
@@ -435,18 +439,10 @@ export default {
       const {
         detail: { avatarUrl },
       } = e;
-      this.appUser.avatarUrl =
+      this.appUser.avatar =
         "data:image/jpeg;base64," +
         uni.getFileSystemManager().readFileSync(avatarUrl, "base64");
     },
-    onLogin() {
-      this.login((result) => {
-        this.appUser = result.userInfo;
-        console.log(this.appUser);
-      });
-    },
   },
-
-  onLoad() {},
 };
 </script>

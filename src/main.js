@@ -29,7 +29,7 @@ Vue.prototype.toast = function (message) {
 };
 
 Vue.prototype.getAppUser = function () {
-  return uni.getStorageSync("APP_USER");
+  return uni.getStorageSync("APP_USER") || {};
 };
 
 Vue.config.productionTip = false;

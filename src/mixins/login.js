@@ -1,10 +1,16 @@
 export default {
   data() {
-    return {};
+    return {
+      appUser: {},
+      bindMobileModal: {
+        visible: false,
+        userProfile: {},
+      },
+    };
   },
 
   methods: {
-    async login(cb) {
+    async login() {
       uni.showLoading({
         title: "授权登录中...",
         mask: true,
@@ -37,22 +43,12 @@ export default {
         ]);
 
         if (userInfo && code) {
-          uni.setStorageSync("APP_USER", userInfo);
-          cb({
-            userInfo,
+          this.bindMobileModal.userProfile = {
+            current: userInfo,
             code,
-          });
+          };
+          this.bindMobileModal.visible = true;
         }
-
-        // const { openid } = await getOpenIdRes(code);
-        // const result = await checkLoginRes({
-        //   openid,
-        //   nickname: userInfo.nickName,
-        //   avatar: userInfo.avatarUrl,
-        // });
-        // this.appUser = result.userinfo;
-        // uni.setStorageSync("APP_USER", this.appUser);
-        // this.getLastestOrder();
       } catch (error) {
         console.log("debugger::error_login", error);
         uni.showToast({
@@ -63,5 +59,12 @@ export default {
         uni.hideLoading();
       }
     },
+    getUserHandler(appUser) {
+      this.appUser = appUser;
+    },
+  },
+
+  onShow() {
+    this.appUser = this.getAppUser();
   },
 };
