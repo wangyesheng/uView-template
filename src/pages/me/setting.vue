@@ -1,6 +1,6 @@
 <style lang="scss" scoped>
 .setting-wrap {
-  height: 100vh;
+  min-height: 100vh;
   background: #f9f9fd;
   padding: 44rpx 30rpx 0;
 
@@ -81,7 +81,7 @@
           class="cell"
           hover-class="cell-hover"
           hover-stay-time="150"
-          @click="onCellClick"
+          @click="onCellClick('about')"
         >
           <span>关于平台</span>
           <u-icon name="arrow-right" color="#D8DBDC" />
@@ -90,7 +90,7 @@
           class="cell"
           hover-class="cell-hover"
           hover-stay-time="150"
-          @click="onCellClick"
+          @click="onCellClick('agreement')"
         >
           <span>服务协议</span>
           <u-icon name="arrow-right" color="#D8DBDC" />
@@ -99,14 +99,13 @@
           class="cell"
           hover-class="cell-hover"
           hover-stay-time="150"
-          @click="onCellClick"
+          @click="onCellClick('cache')"
         >
           <span>清除缓存</span>
           <u-icon name="arrow-right" color="#D8DBDC" />
         </div>
       </div>
     </div>
-
     <u-button shape="circle" @click="onLogout">退出登录</u-button>
   </div>
 </template>
@@ -120,7 +119,14 @@ export default {
   },
 
   methods: {
-    onCellClick() {},
+    onCellClick(key) {
+      if (key === "cache") {
+        uni.clearStorageSync();
+        this.toast("缓存清除成功");
+      } else {
+        this.navTo(`/pages/me/info?type=${key}`);
+      }
+    },
     onLogout() {
       uni.setStorageSync("APP_USER", {});
       uni.switchTab({

@@ -1,14 +1,14 @@
 <style lang="scss" scoped>
 .my-opinion-wrap {
-  height: 100vh;
+  min-height: 100vh;
   background: #f9f9fd;
-  padding: 48rpx 30rpx 0;
+  padding: 30rpx;
   box-sizing: border-box;
 
   .opinion-layer {
-    height: 354rpx;
     background: #ffffff;
     border-radius: 34rpx;
+    margin-bottom: 20rpx;
 
     &-header {
       height: 92rpx;
@@ -38,10 +38,21 @@
       padding: 28rpx 34rpx 30rpx 28rpx;
 
       .cont {
-        font-size: 22rpx;
+        font-size: 30rpx;
         font-weight: 400;
         color: #30303b;
         line-height: 32rpx;
+      }
+
+      .images-wrap {
+        margin-top: 20rpx;
+        display: flex;
+        flex-wrap: wrap;
+        img {
+          width: 150rpx;
+          height: 150rpx;
+          margin-right: 20rpx;
+        }
       }
     }
   }
@@ -50,23 +61,61 @@
 
 <template>
   <div class="my-opinion-wrap">
-    <div class="opinion-layer">
+    <div class="opinion-layer" v-for="item in opinions" :key="item.id">
       <div class="opinion-layer-header">
-        <span class="mobile">18816200821</span>
-        <span class="time"> 2022-02-23 15:30 </span>
+        <span class="mobile">{{ item.mobile }}</span>
+        <span class="time"> {{ item._time }} </span>
       </div>
       <div class="opinion-layer-content">
         <p class="cont">
-          晚上看撒开手机卡健身卡就是卡健身卡家备份晚上看撒开手机卡健身卡就是卡健身卡家备份晚上看撒开手机卡健身卡就是卡健身卡
+          {{ item.content }}
         </p>
-        <div class="images-wrap"></div>
+        <div class="images-wrap">
+          <img
+            v-for="(src, i) in item._images"
+            :key="i"
+            :src="src"
+            alt=""
+            @click="onPreview(src)"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getOpinionsRes } from "@/api";
+import dayjs from "dayjs";
+
 export default {
   name: "my-opinion",
+
+  data() {
+    return {
+      opinions: [],
+    };
+  },
+
+  methods: {
+    async getOpinions() {
+      const data = await getOpinionsRes();
+      this.opinions = data.map((x) => ({
+        ...x,
+        _time: dayjs(x.createtime * 1000).format("YYYY-MM-DD HH:mm:ss"),
+        _images: x.images ? x.images.split(",") : [],
+      }));
+    },
+    onPreview(url) {
+      uni.previewImage({
+        current: 0,
+        urls: [url],
+      });
+    },
+  },
+
+  onLoad() {
+    this.getOpinions();
+  },
 };
 </script>

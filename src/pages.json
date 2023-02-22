@@ -40,6 +40,25 @@
         "navigationBarTitleText": "我的",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/order/index",
+      "style": {
+        "navigationBarTitleText": "历史预约"
+      }
+    },
+    {
+      "path": "pages/order/edition",
+      "style": {
+        "navigationBarTitleText": "编辑预约信息"
+      }
+    },
+    {
+      "path": "pages/me/info",
+      "style": {
+        "navigationBarTitleText": "历史预约",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "globalStyle": {

@@ -42,7 +42,12 @@
   margin-top: 54rpx;
   padding: 0 90rpx;
   box-sizing: border-box;
-
+  .routeName {
+    font-size: 36rpx;
+    font-weight: 550;
+    margin-bottom: 40rpx;
+    color: #158edc;
+  }
   ::v-deep {
     .u-time-axis::before {
       border-left: 1px solid #158edc;
@@ -71,15 +76,30 @@
     }
   }
 }
+
+.no-route {
+  height: 30vh;
+  text-align: center;
+  line-height: 30vh;
+  font-size: 32rpx;
+  font-weight: 550;
+  color: #666;
+}
 </style>
 
 <template>
   <app-layout background="#f9f9fd">
-    <div class="store" @click="hotelPopupVisible = true">
+    <div class="store" @click="onTypeClick('store')">
       <div class="store-inner">
         <div class="left">
-          <img src="../../static/images/home/icon-hotel.png" alt="" />
-          <span> 选择免税店 </span>
+          <img src="../../static/images/home/icon-store.png" alt="" />
+          <span>
+            {{
+              storePopup.currentStore.name
+                ? storePopup.currentStore.name
+                : "选择免税店"
+            }}
+          </span>
         </div>
         <u-icon
           name="arrow-down-fill"
@@ -88,30 +108,85 @@
         />
       </div>
     </div>
-    <div class="timeline">
-      <u-time-line>
-        <u-time-line-item v-for="i in 5" :key="i">
-          <template v-slot:content>
-            <view>
-              <view class="u-order-desc">海口亚特国际会议中心酒店</view>
-              <view class="u-order-time">时间：09:20</view>
-            </view>
-          </template>
-        </u-time-line-item>
-      </u-time-line>
+    <div class="store" @click="onTypeClick('hotel')">
+      <div class="store-inner">
+        <div class="left">
+          <img src="../../static/images/home/icon-hotel.png" alt="" />
+          <span>
+            {{
+              hotelPopup.currentHotel.name
+                ? hotelPopup.currentHotel.name
+                : "选择乘车站"
+            }}
+          </span>
+        </div>
+        <u-icon
+          name="arrow-down-fill"
+          color="#000"
+          :custom-style="{ width: '32rpx', height: '16rpx' }"
+        />
+      </div>
+    </div>
+    <div v-if="routes.length > 0">
+      <div class="timeline" v-for="(route, i) in routes" :key="i">
+        <div class="routeName">{{ route.route_name }}</div>
+        <u-time-line>
+          <u-time-line-item
+            v-for="layer in route.items"
+            :key="`${layer.id}-${i}`"
+          >
+            <template v-slot:content>
+              <view>
+                <view class="u-order-desc">{{ layer.name }}</view>
+                <view class="u-order-time">
+                  <text>发车时间：</text>
+                  <text> {{ layer.traintime.join("、") }} </text>
+                </view>
+              </view>
+            </template>
+          </u-time-line-item>
+        </u-time-line>
+      </div>
     </div>
 
-    <Popup v-model="hotelPopupVisible" />
+    <div
+      v-else-if="hotelPopup.currentHotel.id && storePopup.currentStore.id"
+      class="no-route"
+    >
+      暂无路线...
+    </div>
+
+    <Popup
+      v-model="hotelPopup.visible"
+      :dataSource="hotelPopup.data"
+      @getData="getCurrentHotelData"
+    />
+    <Popup
+      v-model="storePopup.visible"
+      :dataSource="storePopup.data"
+      @getData="getCurrentStoreData"
+    />
   </app-layout>
 </template>
 
 <script>
 import Popup from "@/components/Popup";
+import { getHotelsRes, getPointsRes, getRouteInfoListRes } from "@/api";
 
 export default {
   data() {
     return {
-      hotelPopupVisible: false,
+      hotelPopup: {
+        visible: false,
+        data: [],
+        currentHotel: {},
+      },
+      storePopup: {
+        visible: false,
+        data: [],
+        currentStore: {},
+      },
+      routes: [],
     };
   },
 
@@ -119,6 +194,61 @@ export default {
     Popup,
   },
 
-  onLoad() {},
+  watch: {
+    "storePopup.currentStore.id"(n, o) {
+      if (n !== o) {
+        this.getRouteInfoList();
+      }
+    },
+    "hotelPopup.currentHotel.id"(n, o) {
+      if (n !== o) {
+        this.getRouteInfoList();
+      }
+    },
+  },
+
+  methods: {
+    async getStores() {
+      const data = await getPointsRes();
+      this.storePopup.data = data;
+    },
+    async getHotels() {
+      const data = await getHotelsRes();
+      this.hotelPopup.data = data;
+    },
+    onTypeClick(type) {
+      if (type === "store") {
+        this.storePopup.visible = true;
+      } else {
+        this.hotelPopup.visible = true;
+      }
+    },
+    getCurrentHotelData(hotel) {
+      if (hotel.id !== this.hotelPopup.currentHotel.id) {
+        this.hotelPopup.currentHotel = hotel;
+      }
+    },
+    getCurrentStoreData(store) {
+      if (store.id !== this.storePopup.currentStore.id) {
+        this.storePopup.currentStore = store;
+      }
+    },
+    async getRouteInfoList() {
+      const { id: hotel_id } = this.hotelPopup.currentHotel;
+      const { id: point_id } = this.storePopup.currentStore;
+      if (hotel_id && point_id) {
+        const data = await getRouteInfoListRes({
+          hotel_id,
+          point_id,
+        });
+        this.routes = data;
+      }
+    },
+  },
+
+  onLoad() {
+    this.getHotels();
+    this.getStores();
+  },
 };
 </script>

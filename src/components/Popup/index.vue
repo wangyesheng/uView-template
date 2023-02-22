@@ -1,6 +1,6 @@
 <style lang="scss" scoped>
 ._wrap {
-  height: 68vh;
+  height: 50vh;
   padding: 40rpx 20rpx;
   box-sizing: border-box;
   background: #f9f9fd;

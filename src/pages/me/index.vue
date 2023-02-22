@@ -42,16 +42,17 @@
         }
 
         .role {
-          width: 106rpx;
-          height: 28rpx;
-          background-image: url(https://zhonghai.tuomuit.com/assets/wechat/img/banner-bg.jpg);
-          background-repeat: no-repeat;
-          background-size: 100% 100%;
-          font-size: 20rpx;
-          font-weight: 400;
-          color: #dbdde7;
-          text-align: center;
-          line-height: 28rpx;
+          // width: 106rpx;
+          // height: 28rpx;
+          // background: ;
+          // background-image: url(https://zhonghai.tuomuit.com/assets/wechat/img/banner-bg.jpg);
+          // background-repeat: no-repeat;
+          // background-size: 100% 100%;
+          // font-size: 20rpx;
+          // font-weight: 400;
+          // color: #dbdde7;
+          // text-align: center;
+          // line-height: 28rpx;
         }
       }
     }
@@ -135,7 +136,7 @@
     }
 
     &-content {
-      margin-top: 76rpx;
+      margin-top: 56rpx;
 
       .layer {
         font-size: 26rpx;
@@ -192,10 +193,9 @@
     &-status {
       font-size: 24rpx;
       font-weight: bold;
-      color: #1fae8e;
       position: absolute;
       right: 46rpx;
-      top: 158rpx;
+      top: 138rpx;
     }
 
     .no-data {
@@ -292,7 +292,7 @@
           />
           <div class="right">
             <span class="mobile">{{ appUser.mobile }}</span>
-            <div class="role">游客</div>
+            <u-tag :text="appUser.role" mode="dark" />
           </div>
         </div>
 
@@ -313,44 +313,68 @@
                 />
                 <span>我的预约</span>
               </div>
-              <div class="right">
+              <div class="right" @click="navTo('/pages/order/index')">
                 <span>历史预约</span>
                 <u-icon name="arrow-right" color="#868686" />
               </div>
             </div>
-            <template>
+            <template v-if="lastestReserve.id">
               <div class="my-order-content">
                 <div class="layer">
-                  <span class="label">酒店：</span>
-                  <span class="value">无锡希尔顿五星级大酒店</span>
+                  <span class="label">免税店：</span>
+                  <span class="value">{{ lastestReserve.point_name }}</span>
+                </div>
+                <div class="layer">
+                  <span class="label">乘车站：</span>
+                  <span class="value">{{ lastestReserve.start_station }}</span>
                 </div>
                 <div class="layer">
                   <span class="label">班次：</span>
-                  <span class="value">708 大巴车</span>
+                  <span class="value">{{ lastestReserve.schedule_name }}</span>
                 </div>
                 <div class="layer">
                   <span class="label">时间：</span>
-                  <span class="value">2022-12-23 12:34</span>
+                  <span class="value">
+                    {{ lastestReserve.reserve_date }}
+                    {{ lastestReserve.reserve_time }}
+                  </span>
                 </div>
               </div>
               <div class="my-order-footer">
                 <div class="action">
-                  <u-button shape="circle">取消预约</u-button>
-                  <u-button shape="circle" type="primary">修改</u-button>
+                  <u-button
+                    shape="circle"
+                    @click="cancelReserve(lastestReserve.id)"
+                  >
+                    取消预约
+                  </u-button>
+                  <u-button
+                    shape="circle"
+                    type="primary"
+                    @click="
+                      navTo(
+                        `/pages/order/edition?reserve_id=${lastestReserve.id}&from=1`
+                      )
+                    "
+                  >
+                    修改
+                  </u-button>
                 </div>
               </div>
-              <div class="my-order-status">等待中...</div>
+              <div
+                class="my-order-status"
+                :style="{ color: lastestReserve._statusMap.color }"
+              >
+                {{ lastestReserve._statusMap.label }}
+              </div>
             </template>
-            <!-- <div class="no-data">
-            <img src="../../static/images/me/icon-no-data.png" alt="" />
-            <span>暂无预约...</span>
-          </div> -->
+
+            <div class="no-data" v-else>
+              <img src="../../static/images/me/icon-no-data.png" alt="" />
+              <span>暂无预约...</span>
+            </div>
           </div>
         </template>
-        <!--   <div class="no-data">
-          <img src="../../static/images/me/icon-no-data.png" alt="" />
-          <span>暂无预约...</span>
-        </div>-->
 
         <div class="functions">
           <div class="title">常用功能</div>
@@ -387,6 +411,12 @@
 <script>
 import BindMobile from "@/components/BindMobile";
 import loginMixin from "@/mixins/login";
+import {
+  getLastestReserveRes,
+  cancelReserveRes,
+  getCustomerPhoneRes,
+  updateUserProfileRes,
+} from "@/api";
 
 export default {
   name: "Me",
@@ -413,6 +443,7 @@ export default {
           label: "设置",
         },
       ],
+      lastestReserve: {},
     };
   },
 
@@ -422,8 +453,18 @@ export default {
     },
   },
 
+  watch: {
+    appUser(n, o) {
+      if (n.id !== o.id) this.getLastestReserve();
+    },
+  },
+
   methods: {
     onFunctionClick(key) {
+      if (!this.appUser.id) {
+        this.toast("请先授权登录");
+        return;
+      }
       switch (key) {
         case "setting":
           this.navTo("/pages/me/setting");
@@ -431,18 +472,59 @@ export default {
         case "opinion":
           this.navTo("/pages/opinion/index");
           break;
-        default:
+        case "customer-service":
+          this.processCustomer();
           break;
       }
     },
-    onChooseAvatar(e) {
+    async processCustomer() {
+      const data = await getCustomerPhoneRes();
+      uni.makePhoneCall({
+        phoneNumber: data,
+        success: (_) => {},
+      });
+    },
+    async onChooseAvatar(e) {
       const {
         detail: { avatarUrl },
       } = e;
       this.appUser.avatar =
         "data:image/jpeg;base64," +
         uni.getFileSystemManager().readFileSync(avatarUrl, "base64");
+      await updateUserProfileRes({ avatar: this.appUser.avatar });
+      uni.setStorageSync("APP_USER", this.appUser);
     },
+    async getLastestReserve() {
+      const data = await getLastestReserveRes();
+      this.lastestReserve = {
+        ...data,
+        _statusMap: {
+          label:
+            data.status == 0
+              ? "等待中..."
+              : data.status == 1
+              ? "已完成"
+              : "已取消",
+          color: data.status == 0 ? "#1FAE8E" : "#AAA",
+        },
+      };
+    },
+    async cancelReserve(reserve_id) {
+      uni.showModal({
+        title: "提示",
+        content: `确定要取消预约吗？`,
+        success: async (res) => {
+          if (res.confirm) {
+            await cancelReserveRes(reserve_id);
+            this.getLastestReserve();
+          }
+        },
+      });
+    },
+  },
+
+  onShow() {
+    if (this.appUser.id) this.getLastestReserve();
   },
 };
 </script>

@@ -52,8 +52,17 @@ export default {
         mobile: phoneInfo.phoneNumber,
       };
       const { userinfo } = await checkLoginRes(reqData);
-      uni.setStorageSync("APP_USER", userinfo);
-      this.$emit("getUser", userinfo);
+      const appUser = {
+        ...userinfo,
+        role:
+          userinfo.group_id == 1
+            ? "游客"
+            : userinfo.group_id == 2
+            ? "员工"
+            : "驾驶员",
+      };
+      uni.setStorageSync("APP_USER", appUser);
+      this.$emit("getUser", appUser);
       this.$emit("input", false);
     },
   },

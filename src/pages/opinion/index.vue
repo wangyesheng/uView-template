@@ -1,6 +1,6 @@
 <style lang="scss" scoped>
 .opinion-wrap {
-  height: 100vh;
+  min-height: 100vh;
   background: #f9f9fd;
   padding: 50rpx 30rpx 0;
   box-sizing: border-box;
@@ -127,11 +127,16 @@
           type="textarea"
           maxlength="200"
           placeholder="请输入200字以内的意见"
+          v-model="formData.content"
         />
         <span class="tips">0/200</span>
       </div>
       <div class="form-item">
-        <u-input maxlength="11" placeholder="请输入手机号" />
+        <u-input
+          maxlength="11"
+          placeholder="请输入手机号"
+          v-model="formData.mobile"
+        />
         <img
           class="mobile"
           src="../../static/images/me/icon-mobile.png"
@@ -139,7 +144,17 @@
         />
       </div>
       <div class="form-item">
-        <u-upload custom-btn>
+        <u-upload
+          ref="uploadRef"
+          custom-btn
+          action="https://zhonghai.tuomuit.com/api/common/upload"
+          :header="{
+            token: appUser.token,
+          }"
+          @on-success="onUploadSuccess"
+          @on-remove="onUploadRemove"
+          @on-error="onUploadError"
+        >
           <div class="custom-upload" slot="addBtn">
             <img
               class="icon-upload"
@@ -150,7 +165,60 @@
           </div>
         </u-upload>
       </div>
-      <u-button type="primary" shape="circle">提交</u-button>
+      {{ error }}
+      <u-button type="primary" shape="circle" @click="onSubmit">提交</u-button>
     </div>
   </div>
 </template>
+
+<script>
+import { createOpinionRes } from "@/api";
+
+export default {
+  name: "opinion",
+
+  data() {
+    return {
+      appUser: this.getAppUser(),
+      formData: {
+        content: "",
+        mobile: "",
+        images: [],
+      },
+      error: "",
+    };
+  },
+
+  methods: {
+    onUploadSuccess(response) {
+      this.formData.images.push(response.data.fullurl);
+    },
+    onUploadRemove(index, result) {
+      this.formData.images = result.map((x) => x.response.data.fullurl);
+    },
+    onUploadError(...args) {
+      this.error = JSON.stringify(args);
+    },
+    async onSubmit() {
+      const { content, mobile, images } = this.formData;
+      if (!content) {
+        this.toast("请输入反馈意见");
+        return;
+      }
+      if (!mobile) {
+        this.toast("请输入手机号");
+        return;
+      }
+      const reqData = { content, mobile, images: images.join(",") };
+      await createOpinionRes(reqData);
+      this.formData = {
+        content: "",
+        mobile: "",
+        images: [],
+      };
+      this.$refs.uploadRef && this.$refs.uploadRef.clear();
+      this.toast("反馈成功");
+    },
+  },
+};
+</script>
