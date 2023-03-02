@@ -19,12 +19,6 @@ export default {
           pagePath: "/pages/home/index",
         },
         {
-          iconPath: "/static/images/tabbar/route.png",
-          selectedIconPath: "/static/images/tabbar/route-selected.png",
-          text: "路线查询",
-          pagePath: "/pages/route/index",
-        },
-        {
           iconPath: "/static/images/tabbar/me.png",
           selectedIconPath: "/static/images/tabbar/me-selected.png",
           text: "我的",
