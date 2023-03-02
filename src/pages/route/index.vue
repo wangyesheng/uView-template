@@ -53,6 +53,9 @@
       border-left: 1px solid #158edc;
       border-left-color: #158edc;
     }
+    .u-time-axis-item {
+      margin-bottom: 42rpx;
+    }
     .u-time-axis-node {
       background-color: #158edc;
       .u-dot {
@@ -63,7 +66,7 @@
     }
 
     .u-order-desc {
-      font-size: 32rpx;
+      font-size: 30rpx;
       font-weight: bold;
       color: #484848;
     }
@@ -155,43 +158,25 @@
     >
       暂无路线...
     </div>
-
-    <Popup
-      v-model="hotelPopup.visible"
-      :dataSource="hotelPopup.data"
-      @getData="getCurrentHotelData"
-    />
-    <Popup
-      v-model="storePopup.visible"
-      :dataSource="storePopup.data"
-      @getData="getCurrentStoreData"
-    />
   </app-layout>
 </template>
 
 <script>
-import Popup from "@/components/Popup";
-import { getHotelsRes, getPointsRes, getRouteInfoListRes } from "@/api";
+import { getRouteInfoListRes } from "@/api";
 
 export default {
   data() {
     return {
       hotelPopup: {
         visible: false,
-        data: [],
         currentHotel: {},
       },
       storePopup: {
         visible: false,
-        data: [],
         currentStore: {},
       },
       routes: [],
     };
-  },
-
-  components: {
-    Popup,
   },
 
   watch: {
@@ -208,19 +193,31 @@ export default {
   },
 
   methods: {
-    async getStores() {
-      const data = await getPointsRes();
-      this.storePopup.data = data;
-    },
-    async getHotels() {
-      const data = await getHotelsRes();
-      this.hotelPopup.data = data;
-    },
     onTypeClick(type) {
+      const { id: hotel_id, scrollTop: hotelScrollTop } =
+        this.hotelPopup.currentHotel;
+      const { id: point_id, scrollTop: storeScrollTop } =
+        this.storePopup.currentStore;
       if (type === "store") {
-        this.storePopup.visible = true;
+        if (point_id) {
+          this.navTo(
+            `/pages/data/store?id=${point_id}&scrollTop=${storeScrollTop}`
+          );
+        } else {
+          this.navTo(`/pages/data/store`);
+        }
       } else {
-        this.hotelPopup.visible = true;
+        if (!point_id) {
+          this.toast("请选择免税店");
+          return;
+        }
+        if (hotel_id) {
+          this.navTo(
+            `/pages/data/hotel?pointId=${point_id}&id=${hotel_id}&scrollTop=${hotelScrollTop}`
+          );
+        } else {
+          this.navTo(`/pages/data/hotel?pointId=${point_id}`);
+        }
       }
     },
     getCurrentHotelData(hotel) {
@@ -231,6 +228,8 @@ export default {
     getCurrentStoreData(store) {
       if (store.id !== this.storePopup.currentStore.id) {
         this.storePopup.currentStore = store;
+        this.hotelPopup.currentHotel = {};
+        this.routes = [];
       }
     },
     async getRouteInfoList() {
@@ -244,11 +243,6 @@ export default {
         this.routes = data;
       }
     },
-  },
-
-  onLoad() {
-    this.getHotels();
-    this.getStores();
   },
 };
 </script>

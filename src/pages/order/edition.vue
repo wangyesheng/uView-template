@@ -37,9 +37,34 @@
       border-radius: 8rpx;
       padding-left: 34rpx;
       padding-right: 42rpx;
-      margin-bottom: 20rpx;
+      margin-bottom: 40rpx;
       display: flex;
       align-items: center;
+
+      &.appointment {
+        background: #fff;
+        justify-content: center;
+
+        ::v-deep {
+          .u-numberbox {
+            width: 100%;
+            display: flex !important;
+
+            input {
+              flex: 1 !important;
+              width: auto !important;
+              height: 80rpx !important;
+              font-size: 30rpx !important;
+              font-weight: 550 !important;
+              color: #383846 !important;
+            }
+
+            [class^="u-icon"] {
+              height: 80rpx !important;
+            }
+          }
+        }
+      }
 
       .left {
         width: 90%;
@@ -109,27 +134,30 @@
     <div class="order-form-wrap">
       <div class="order-form-inner">
         <div
-          class="order-form-item"
+          :class="['order-form-item', item.key]"
           hover-class="order-form-item-hover"
           hover-stay-time="150"
           v-for="item in orderFormItems"
           :key="item.key"
           @click="onFormItemClick(item)"
         >
-          <div class="left">
-            <img
-              :src="require(`../../static/images/home/icon-${item.key}.png`)"
-              alt=""
+          <template v-if="item.key !== 'appointment'">
+            <div class="left">
+              <img
+                :src="require(`../../static/images/home/icon-${item.key}.png`)"
+                alt=""
+              />
+              <span>
+                {{ item.label }}
+              </span>
+            </div>
+            <u-icon
+              color="#000"
+              name="arrow-down-fill"
+              :custom-style="{ width: '32rpx', height: '16rpx' }"
             />
-            <span>
-              {{ item.label }}
-            </span>
-          </div>
-          <u-icon
-            color="#000"
-            name="arrow-down-fill"
-            :custom-style="{ width: '32rpx', height: '16rpx' }"
-          />
+          </template>
+          <u-number-box v-else v-model="item.label" />
         </div>
       </div>
       <div class="canUseTips" v-if="route.id">
@@ -142,18 +170,7 @@
         提交
       </u-button>
     </div>
-    <Popup
-      v-model="hotelPopup.visible"
-      :dataSource="hotelPopup.data"
-      @getData="getCurrentHotelData"
-    />
-    <Popup
-      v-model="storePopup.visible"
-      :dataSource="storePopup.data"
-      @getData="getCurrentStoreData"
-    />
     <u-select
-      mode="mutil-column"
       v-model="timeSelect.visible"
       :default-value="timeSelect.defaultValue"
       :list="timeSelect.data"
@@ -171,29 +188,18 @@
 </template>
 
 <script>
-import Popup from "@/components/Popup";
 import {
   getHotelsRes,
   getPointsRes,
   getRoutesRes,
   getRouteNumberRes,
-  createReserveRes,
   getReserveByIdRes,
   updateReserveRes,
 } from "@/api";
 import dayjs from "dayjs";
 
-let timeValueIndexMap = {
-  first: {},
-  second: {},
-};
-
 export default {
   name: "edition",
-
-  components: {
-    Popup,
-  },
 
   data() {
     return {
@@ -244,13 +250,17 @@ export default {
   methods: {
     async getReserveById() {
       const data = await getReserveByIdRes(this.reserve_id);
+      const [hotelScrollTop, storeScrollTop] = data.scroll_top.split(",");
       if (data && data.id) {
-        this.hotelPopup.currentHotel = this.hotelPopup.data.find(
-          (x) => x.id === data.hotel_id
-        );
-        this.storePopup.currentStore = this.storePopup.data.find(
-          (x) => x.id === data.point_id
-        );
+        this.hotelPopup.currentHotel = {
+          ...this.hotelPopup.data.find((x) => x.id === data.hotel_id),
+          scrollTop: hotelScrollTop,
+        };
+
+        this.storePopup.currentStore = {
+          ...this.storePopup.data.find((x) => x.id === data.point_id),
+          scrollTop: storeScrollTop,
+        };
         this.findOrderItem("store", this.storePopup.currentStore.name);
         this.findOrderItem("hotel", this.hotelPopup.currentHotel.name);
         const ymd = data.reserve_date;
@@ -258,20 +268,33 @@ export default {
         this.timeSelect.currentTime = [ymd, time];
         this.findOrderItem("time", `${ymd} ${time}`);
         await this.getRouteCanUseNumber();
-
         this.reverseSelect.defaultValue = [data.number - 1];
         this.reverseSelect.number = data.number;
         this.findOrderItem("appointment", data.number);
       }
     },
     onFormItemClick({ key }) {
+      const { id: hotel_id, scrollTop: hotelScrollTop } =
+        this.hotelPopup.currentHotel;
+      const { id: point_id, scrollTop: storeScrollTop } =
+        this.storePopup.currentStore;
       if (key === "store") {
-        this.storePopup.visible = true;
+        if (point_id) {
+          this.navTo(
+            `/pages/data/store?id=${point_id}&scrollTop=${storeScrollTop}`
+          );
+        } else {
+          this.navTo(`/pages/data/store`);
+        }
       } else if (key === "hotel") {
-        this.hotelPopup.visible = true;
+        if (hotel_id) {
+          this.navTo(
+            `/pages/data/hotel?pointId=${point_id}&id=${hotel_id}&scrollTop=${hotelScrollTop}`
+          );
+        } else {
+          this.navTo(`/pages/data/hotel?pointId=${point_id}`);
+        }
       } else if (key === "time") {
-        const { id: hotel_id } = this.hotelPopup.currentHotel;
-        const { id: point_id } = this.storePopup.currentStore;
         if (!point_id) {
           this.toast("请选择免税店");
           return;
@@ -289,15 +312,15 @@ export default {
           this.getRoutes(hotel_id, point_id);
         }
       } else if (key === "appointment") {
-        if (this.timeSelect.currentTime.length === 0) {
-          this.toast("请选择乘车时间");
-          return;
-        }
-        if (this.reverseSelect.data.length === 0) {
-          this.toast("该时间段已无剩余座位");
-          return;
-        }
-        this.reverseSelect.visible = true;
+        // if (this.timeSelect.currentTime.length === 0) {
+        //   this.toast("请选择乘车时间");
+        //   return;
+        // }
+        // if (this.reverseSelect.data.length === 0) {
+        //   this.toast("该时间段已无剩余座位");
+        //   return;
+        // }
+        // this.reverseSelect.visible = true;
       }
     },
     async getRoutes(hotel_id, point_id) {
@@ -308,54 +331,45 @@ export default {
       if (data && data.length > 0) {
         const currentDay = dayjs().format("YYYY-MM-DD");
         const nextDay = dayjs().add(1, "day").format("YYYY-MM-DD");
-        timeValueIndexMap.first = {
-          [currentDay]: 0,
-          [nextDay]: 1,
-        };
-        const first = [
-          {
-            value: currentDay,
-            label: currentDay,
-          },
-          {
-            value: nextDay,
-            label: nextDay,
-          },
-        ];
-        const second = data.map((x, index) => {
-          timeValueIndexMap.second[x] = index;
+
+        const currentDates = [];
+        const nextDates = [];
+
+        data.forEach((x) => {
+          const currentDate = `${currentDay} ${x}`;
+          const comparedDate = dayjs(currentDate).unix();
+          const now = dayjs().unix();
+          if (comparedDate > now) {
+            currentDates.push(currentDate);
+          }
+          nextDates.push(`${nextDay} ${x}`);
+        });
+
+        this.timeSelect.data = currentDates.concat(nextDates).map((x, i) => {
           return {
             label: x,
-            value: x,
+            value: i,
           };
         });
-        const [ymd, time] = this.timeSelect.currentTime;
-        if (ymd && time) {
+
+        if (this.timeSelect.currentTime.length > 0) {
           this.timeSelect.defaultValue = [
-            timeValueIndexMap.first[ymd],
-            timeValueIndexMap.second[time],
+            this.timeSelect.data.findIndex(
+              (x) => x.label === this.timeSelect.currentTime.join(" ")
+            ),
           ];
         }
-        this.timeSelect.data = [first, second];
+
         this.timeSelect.visible = true;
       } else {
         this.toast("暂无可预约时间");
       }
     },
-    onTimeConfirm([ymd, time]) {
-      const template = dayjs(`${ymd.value} ${time.value}`).unix();
-      const now = dayjs().unix();
-      if (now > template) {
-        this.toast("当前时间段不可预约");
-      } else {
-        this.timeSelect.currentTime = [ymd.value, time.value];
-        this.timeSelect.defaultValue = [
-          timeValueIndexMap.first[ymd.value],
-          timeValueIndexMap.second[time.value],
-        ];
-        this.findOrderItem("time", `${ymd.value} ${time.value}`);
-        this.getRouteCanUseNumber();
-      }
+    onTimeConfirm([date]) {
+      this.timeSelect.currentTime = date.label.split(" ");
+      this.timeSelect.defaultValue = [date.value];
+      this.findOrderItem("time", date.label);
+      this.getRouteCanUseNumber();
     },
     async getRouteCanUseNumber() {
       const { id: hotel_id } = this.hotelPopup.currentHotel;
@@ -397,6 +411,8 @@ export default {
       if (store.id !== this.storePopup.currentStore.id) {
         this.storePopup.currentStore = store;
         this.findOrderItem("store", store.name);
+        this.hotelPopup.currentHotel = {};
+        this.findOrderItem("hotel", "选择乘车站");
         this.initSelectData();
       }
     },
@@ -405,7 +421,6 @@ export default {
       scope.label = label;
     },
     initSelectData() {
-      timeValueIndexMap = { first: {}, second: {} };
       this.timeSelect.data = [];
       this.timeSelect.currentTime = [];
       this.timeSelect.defaultValue = [];
@@ -425,12 +440,26 @@ export default {
       this.hotelPopup.data = data;
     },
     async onOrderSubmit() {
-      const { id: hotel_id } = this.hotelPopup.currentHotel;
-      const { id: point_id } = this.storePopup.currentStore;
+      const { id: hotel_id, scrollTop: hotelScrollTop } =
+        this.hotelPopup.currentHotel;
+      const { id: point_id, scrollTop: storeScrollTop } =
+        this.storePopup.currentStore;
       const [reserve_date, reserve_time] = this.timeSelect.currentTime;
-      const { number } = this.reverseSelect;
-      if (!hotel_id || !point_id || !reserve_date || !reserve_time || !number) {
-        this.toast("请填写完信息再提交");
+      const appointmentScope = this.orderFormItems.find(
+        (x) => x.key === "appointment"
+      );
+      if (
+        !hotel_id ||
+        !point_id ||
+        !reserve_date ||
+        !reserve_time ||
+        !appointmentScope.label
+      ) {
+        if (appointmentScope.label === 0) {
+          this.toast("预约人数不可为0");
+        } else {
+          this.toast("请填写完信息再提交");
+        }
         return;
       }
       const { route_id, id: schedule_id } = this.route;
@@ -441,8 +470,9 @@ export default {
         reserve_time,
         route_id,
         schedule_id,
-        number,
+        number: appointmentScope.label,
         reserve_id: this.reserve_id,
+        scroll_top: `${hotelScrollTop || 0},${storeScrollTop || 0}`,
       };
       await updateReserveRes(reqData);
       this.$refs.successToastRef.show({

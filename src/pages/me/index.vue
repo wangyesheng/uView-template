@@ -329,15 +329,19 @@
                   <span class="value">{{ lastestReserve.start_station }}</span>
                 </div>
                 <div class="layer">
-                  <span class="label">班次：</span>
-                  <span class="value">{{ lastestReserve.schedule_name }}</span>
-                </div>
-                <div class="layer">
                   <span class="label">时间：</span>
                   <span class="value">
                     {{ lastestReserve.reserve_date }}
                     {{ lastestReserve.reserve_time }}
                   </span>
+                </div>
+                <div class="layer">
+                  <span class="label">预约人数：</span>
+                  <span class="value">{{ lastestReserve.number }}</span>
+                </div>
+                <div class="layer">
+                  <span class="label">班次：</span>
+                  <span class="value">{{ lastestReserve.schedule_name }}</span>
                 </div>
               </div>
               <div class="my-order-footer">

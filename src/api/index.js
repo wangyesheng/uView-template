@@ -52,10 +52,11 @@ export function getBannersRes() {
   });
 }
 
-export function getHotelsRes() {
+export function getHotelsRes(payload) {
   return request({
     url: "/api/hotel/list",
     method: "get",
+    payload,
   });
 }
 export function getPointsRes() {

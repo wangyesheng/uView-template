@@ -183,7 +183,7 @@
       <div class="order-form-wrap">
         <div class="title">
           <img src="../../static/images/home/icon-title.png" alt="" />
-          <span>CDF免费穿梭巴士预约</span>
+          <span>cdf免费穿梭巴士预约</span>
         </div>
         <div class="order-form-inner">
           <div
@@ -229,23 +229,29 @@
         </u-button>
       </div>
     </div>
-    <Popup
+    <!-- <Popup
+      ref="hotelPopupRef"
       v-model="hotelPopup.visible"
       :dataSource="hotelPopup.data"
       @getData="getCurrentHotelData"
-    />
-    <Popup
+    /> -->
+    <!-- <Popup
       v-model="storePopup.visible"
       :dataSource="storePopup.data"
       @getData="getCurrentStoreData"
-    />
+    /> -->
     <u-select
-      mode="mutil-column"
       v-model="timeSelect.visible"
       :default-value="timeSelect.defaultValue"
       :list="timeSelect.data"
       @confirm="onTimeConfirm"
     />
+    <!-- <view
+      class="u-line-1"
+      :style="{ color: item1.disabled ? '#cacaca' : '#303133' }"
+    >
+      {{ item1[labelName] }}
+    </view> -->
     <u-select
       v-model="reverseSelect.visible"
       :default-value="reverseSelect.defaultValue"
@@ -262,12 +268,10 @@
 </template>
 
 <script>
-import Popup from "@/components/Popup";
+// import Popup from "@/components/Popup";
 import BindMobile from "@/components/BindMobile";
 import loginMixin from "@/mixins/login";
 import {
-  getHotelsRes,
-  getPointsRes,
   getRoutesRes,
   getBannersRes,
   getRouteNumberRes,
@@ -275,18 +279,13 @@ import {
 } from "@/api";
 import dayjs from "dayjs";
 
-let timeValueIndexMap = {
-  first: {},
-  second: {},
-};
-
 export default {
   name: "Home",
 
   mixins: [loginMixin],
 
   components: {
-    Popup,
+    // Popup,
     BindMobile,
   },
 
@@ -345,13 +344,31 @@ export default {
         this.toast("请先授权登录");
         return;
       }
+      const { id: hotel_id, scrollTop: hotelScrollTop } =
+        this.hotelPopup.currentHotel;
+      const { id: point_id, scrollTop: storeScrollTop } =
+        this.storePopup.currentStore;
       if (key === "store") {
-        this.storePopup.visible = true;
+        if (point_id) {
+          this.navTo(
+            `/pages/data/store?id=${point_id}&scrollTop=${storeScrollTop}`
+          );
+        } else {
+          this.navTo(`/pages/data/store`);
+        }
       } else if (key === "hotel") {
-        this.hotelPopup.visible = true;
+        if (!point_id) {
+          this.toast("请选择免税店");
+          return;
+        }
+        if (hotel_id) {
+          this.navTo(
+            `/pages/data/hotel?pointId=${point_id}&id=${hotel_id}&scrollTop=${hotelScrollTop}`
+          );
+        } else {
+          this.navTo(`/pages/data/hotel?pointId=${point_id}`);
+        }
       } else if (key === "time") {
-        const { id: hotel_id } = this.hotelPopup.currentHotel;
-        const { id: point_id } = this.storePopup.currentStore;
         if (!point_id) {
           this.toast("请选择免税店");
           return;
@@ -377,6 +394,22 @@ export default {
         this.reverseSelect.visible = true;
       }
     },
+    getCurrentHotelData(hotel) {
+      if (hotel.id !== this.hotelPopup.currentHotel.id) {
+        this.hotelPopup.currentHotel = hotel;
+        this.findOrderItem("hotel", hotel.name);
+        this.initSelectData();
+      }
+    },
+    getCurrentStoreData(store) {
+      if (store.id !== this.storePopup.currentStore.id) {
+        this.storePopup.currentStore = store;
+        this.findOrderItem("store", store.name);
+        this.hotelPopup.currentHotel = {};
+        this.findOrderItem("hotel", "选择乘车站");
+        this.initSelectData();
+      }
+    },
     async getRoutes(hotel_id, point_id) {
       const data = await getRoutesRes({
         hotel_id, // 乘车站
@@ -385,48 +418,36 @@ export default {
       if (data && data.length > 0) {
         const currentDay = dayjs().format("YYYY-MM-DD");
         const nextDay = dayjs().add(1, "day").format("YYYY-MM-DD");
-        timeValueIndexMap.first = {
-          [currentDay]: 0,
-          [nextDay]: 1,
-        };
-        const first = [
-          {
-            value: currentDay,
-            label: currentDay,
-          },
-          {
-            value: nextDay,
-            label: nextDay,
-          },
-        ];
-        const second = data.map((x, index) => {
-          timeValueIndexMap.second[x] = index;
 
+        const currentDates = [];
+        const nextDates = [];
+
+        data.forEach((x) => {
+          const currentDate = `${currentDay} ${x}`;
+          const comparedDate = dayjs(currentDate).unix();
+          const now = dayjs().unix();
+          if (comparedDate > now) {
+            currentDates.push(currentDate);
+          }
+          nextDates.push(`${nextDay} ${x}`);
+        });
+
+        this.timeSelect.data = currentDates.concat(nextDates).map((x, i) => {
           return {
             label: x,
-            value: x,
+            value: i,
           };
         });
-        this.timeSelect.data = [first, second];
         this.timeSelect.visible = true;
       } else {
         this.toast("暂无可预约时间");
       }
     },
-    onTimeConfirm([ymd, time]) {
-      const template = dayjs(`${ymd.value} ${time.value}`).unix();
-      const now = dayjs().unix();
-      if (now > template) {
-        this.toast("当前时间段不可预约");
-      } else {
-        this.timeSelect.currentTime = [ymd.value, time.value];
-        this.timeSelect.defaultValue = [
-          timeValueIndexMap.first[ymd.value],
-          timeValueIndexMap.second[time.value],
-        ];
-        this.findOrderItem("time", `${ymd.value} ${time.value}`);
-        this.getRouteCanUseNumber();
-      }
+    onTimeConfirm([date]) {
+      this.timeSelect.currentTime = date.label.split(" ");
+      this.timeSelect.defaultValue = [date.value];
+      this.findOrderItem("time", date.label);
+      this.getRouteCanUseNumber();
     },
     async getRouteCanUseNumber() {
       const { id: hotel_id } = this.hotelPopup.currentHotel;
@@ -457,26 +478,11 @@ export default {
       this.reverseSelect.defaultValue = [args.value - 1];
       this.reverseSelect.number = args.value;
     },
-    getCurrentHotelData(hotel) {
-      if (hotel.id !== this.hotelPopup.currentHotel.id) {
-        this.hotelPopup.currentHotel = hotel;
-        this.findOrderItem("hotel", hotel.name);
-        this.initSelectData();
-      }
-    },
-    getCurrentStoreData(store) {
-      if (store.id !== this.storePopup.currentStore.id) {
-        this.storePopup.currentStore = store;
-        this.findOrderItem("store", store.name);
-        this.initSelectData();
-      }
-    },
     findOrderItem(key, label) {
       const scope = this.orderFormItems.find((x) => x.key === key);
       scope.label = label;
     },
     initSelectData() {
-      timeValueIndexMap = { first: {}, second: {} };
       this.timeSelect.data = [];
       this.timeSelect.currentTime = [];
       this.timeSelect.defaultValue = [];
@@ -487,17 +493,11 @@ export default {
       this.findOrderItem("time", `选择乘车时间`);
       this.findOrderItem("appointment", `选择预约人数`);
     },
-    async getStores() {
-      const data = await getPointsRes();
-      this.storePopup.data = data;
-    },
-    async getHotels() {
-      const data = await getHotelsRes();
-      this.hotelPopup.data = data;
-    },
     async onOrderSubmit() {
-      const { id: hotel_id } = this.hotelPopup.currentHotel;
-      const { id: point_id } = this.storePopup.currentStore;
+      const { id: hotel_id, scrollTop: hotelScrollTop } =
+        this.hotelPopup.currentHotel;
+      const { id: point_id, scrollTop: pointScrollTop } =
+        this.storePopup.currentStore;
       const [reserve_date, reserve_time] = this.timeSelect.currentTime;
       const { number } = this.reverseSelect;
       if (!hotel_id || !point_id || !reserve_date || !reserve_time || !number) {
@@ -513,6 +513,7 @@ export default {
         route_id,
         schedule_id,
         number,
+        scroll_top: `${hotelScrollTop || 0},${pointScrollTop || 0}`,
       };
       await createReserveRes(reqData);
       this.$refs.successToastRef.show({
@@ -538,8 +539,6 @@ export default {
         this.menuButtonInfo = uni.getMenuButtonBoundingClientRect();
       },
     });
-    this.getHotels();
-    this.getStores();
     this.getBanners();
   },
 };

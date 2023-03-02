@@ -50,6 +50,7 @@ export default {
         nickname: this.userProfile.current.nickName,
         avatar: this.userProfile.current.avatarUrl,
         mobile: phoneInfo.phoneNumber,
+        group_id: 1,
       };
       const { userinfo } = await checkLoginRes(reqData);
       const appUser = {

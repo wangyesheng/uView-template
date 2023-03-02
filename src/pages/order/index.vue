@@ -97,6 +97,10 @@
           </span>
         </div>
         <div class="order-content_layer">
+          <span class="__label">预约人数：</span>
+          <span class="__value">{{ item.number }}</span>
+        </div>
+        <div class="order-content_layer">
           <span class="__label">班次：</span>
           <span class="__value">{{ item.schedule_name }}</span>
         </div>

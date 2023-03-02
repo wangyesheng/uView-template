@@ -1,12 +1,26 @@
 <style lang="scss" scoped>
 ._wrap {
-  height: 68vh;
+  min-height: 100vh;
   padding: 40rpx 20rpx;
   box-sizing: border-box;
   background: #f9f9fd;
+
+  .no-data {
+    height: 60vh;
+    text-align: center;
+    line-height: 60vh;
+    font-size: 30rpx;
+    font-weight: 400;
+    color: #999999;
+  }
+
   ._layer {
     &.active {
       border: 2rpx solid #158edc;
+    }
+
+    &-hover {
+      background: #f8fdff;
     }
     background: #fff;
     padding: 20rpx;
@@ -51,13 +65,8 @@
 </style>
 
 <template>
-  <u-popup
-    mode="bottom"
-    border-radius="30"
-    :value="value"
-    @close="$emit('input', false)"
-  >
-    <div class="_wrap">
+  <div class="_wrap">
+    <template v-if="dataSource.length > 0">
       <div
         v-for="(item, index) in dataSource"
         :key="item.id"
@@ -66,6 +75,8 @@
           activeId == item.id ? 'active' : '',
           `_layer-${item.id}`,
         ]"
+        hover-class="_layer-hover"
+        hover-stay-time="150"
         @click="onHotelItemClick(index)"
       >
         <div class="left">
@@ -78,57 +89,59 @@
           <div class="address">{{ item.address }}</div>
         </div>
       </div>
-    </div>
-  </u-popup>
+    </template>
+    <div class="no-data" v-else>暂无乘车站数据...</div>
+  </div>
 </template>
 
 <script>
-export default {
-  name: "Popup",
+import { getHotelsRes } from "@/api";
 
-  props: {
-    value: {
-      type: Boolean,
-      default: false,
-    },
-    dataSource: {
-      type: Array,
-      default: () => [],
-    },
-  },
+export default {
+  name: "Hotel",
 
   data() {
     return {
       activeId: -1,
+      dataSource: [],
     };
   },
 
   methods: {
+    async geHotels() {
+      const data = await getHotelsRes({
+        point_id: this.pointId,
+      });
+      this.dataSource = data;
+    },
     onHotelItemClick(index) {
       const scope = this.dataSource[index];
       this.activeId = scope.id;
-      this.$emit("getData", scope);
-      this.$emit("input", false);
-    },
-
-    scrollTo() {
-      uni
-        .createSelectorQuery()
-        .in(this)
-        .select("._layer-10")
-        .boundingClientRect((res) => {
-          console.log(res);
-          // 到这里，我们可以从res中读到class为bb4的top，即离顶部的距离（px）
-          // 2使用wx.pageScrollTo()将页面滚动到对应位置
-          // uni.pageScrollTo({
-          //   scrollTop: res.top, // 滚动到的位置（距离顶部 px）
-          //   duration: 0, //滚动所需时间 如果不需要滚动过渡动画，设为0（ms）
-          // });
-        })
-        .exec();
+      const pages = getCurrentPages();
+      const prvePage = pages[pages.length - 2];
+      prvePage.$vm.getCurrentHotelData({
+        ...scope,
+        scrollTop: this.scrollTop,
+      });
+      uni.navigateBack();
     },
   },
 
-  mounted() {},
+  async onLoad({ pointId, id, scrollTop }) {
+    this.pointId = pointId;
+    await this.geHotels();
+    if (id && scrollTop) {
+      this.point_id = pointId;
+      this.activeId = id;
+      uni.pageScrollTo({
+        duration: 100,
+        scrollTop: Number(scrollTop),
+      });
+    }
+  },
+
+  onPageScroll(e) {
+    this.scrollTop = e.scrollTop;
+  },
 };
 </script>

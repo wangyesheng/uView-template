@@ -37,4 +37,10 @@
     }
   }
 }
+
+.u-select {
+  .u-select__header__btn {
+    font-size: 34rpx !important;
+  }
+}
 </style>
