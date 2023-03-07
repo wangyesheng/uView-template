@@ -16,26 +16,6 @@
     flex-direction: column;
     justify-content: flex-end;
     ::v-deep {
-      .u-search {
-        height: 68rpx;
-        background: #f6f9fb;
-        border-radius: 34rpx;
-        padding-right: 22rpx;
-
-        .u-content,
-        .u-input {
-          background-color: #f6f9fb !important;
-        }
-
-        .u-content {
-          padding-left: 76rpx;
-          padding-right: 0;
-          .u-icon__icon {
-            color: #babdc3 !important;
-          }
-        }
-      }
-
       .u-swiper-wrap {
         border-radius: 24rpx !important;
       }
@@ -54,7 +34,7 @@
   .order-form-wrap {
     width: 100%;
     background: #fff;
-    border-radius: 34px;
+    border-radius: 68rpx;
     padding-top: 46rpx;
     padding-left: 44rpx;
     padding-right: 44rpx;
@@ -118,34 +98,84 @@
       }
     }
 
-    .canUseTips {
-      margin-top: 40rpx;
-      text-align: center;
-      font-size: 24rpx;
-      font-weight: bold;
-      color: #383846;
+    .route {
+      margin-top: 80rpx;
+      &-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
-      span:first-child {
-        color: #158edc;
-      }
-      span:last-child {
-        color: #ee0000;
-      }
-    }
+        .left {
+          font-size: 28rpx;
+          font-weight: bold;
+          color: #383846;
+        }
 
-    ::v-deep {
-      .u-btn--primary {
-        margin-top: 40rpx;
-        height: 98rpx;
-        background: linear-gradient(180deg, #5bb3ed 0%, #158edc 100%);
+        .right {
+          font-size: 24rpx;
+          font-weight: 400;
+          color: #868686;
+          display: flex;
+          align-items: center;
+        }
       }
 
-      .u-primary-hover {
-        background: linear-gradient(
-          180deg,
-          #55b3f1 0%,
-          #0d8ce0 100%
-        ) !important;
+      &-content {
+        margin-top: 80rpx;
+        display: flex;
+        border-top: 2rpx solid #ccc;
+
+        &_layer {
+          width: 33.333%;
+          padding: 20rpx;
+          box-sizing: border-box;
+          position: relative;
+          text-align: center;
+          font-size: 24rpx;
+          font-weight: 400;
+          color: #383846;
+
+          &::before {
+            content: "";
+            position: absolute;
+            top: -10rpx;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20rpx;
+            height: 20rpx;
+            background: #ccc;
+            border-radius: 50%;
+          }
+
+          &.isArrived {
+            &::before {
+              background: #158edc;
+            }
+            &::after {
+              content: "";
+              position: absolute;
+              top: -2rpx;
+              left: 0;
+              width: 100%;
+              height: 4rpx;
+              background: #158edc;
+            }
+          }
+          &.isIn {
+            &::before {
+              background: #158edc;
+            }
+            &::after {
+              content: "";
+              position: absolute;
+              top: -2rpx;
+              left: 0;
+              width: 50%;
+              height: 4rpx;
+              background: #158edc;
+            }
+          }
+        }
       }
     }
   }
@@ -156,24 +186,6 @@
   <app-layout>
     <div class="header" :style="{ paddingTop: menuButtonInfo.top + 'px' }">
       <div class="header-inner">
-        <!-- <u-search
-          placeholder="输入关键字"
-          placeholder-color="#babdc3"
-          v-model="searchKey"
-          :excludeWidth="menuButtonInfo.width + 6"
-          :action-style="{
-            width: '88rpx',
-            height: '34rpx',
-            background: '#158EDC',
-            lineHeight: '34rpx',
-            textAlign: 'center',
-            borderRadius: '4rpx',
-            color: '#FDFEFF',
-            fontSize: '18rpx',
-          }"
-          @custom="onSerchByKey"
-          @search="onSerchByKey"
-        /> -->
         <div class="banner">
           <u-swiper :list="banners" height="338" />
         </div>
@@ -183,24 +195,22 @@
       <div class="order-form-wrap">
         <div class="title">
           <img src="../../static/images/home/icon-title.png" alt="" />
-          <span>cdf免费穿梭巴士预约</span>
+          <span>查看路线</span>
         </div>
         <div class="order-form-inner">
           <div
             class="order-form-item"
             hover-class="order-form-item-hover"
             hover-stay-time="150"
-            v-for="item in orderFormItems"
-            :key="item.key"
             @click="onFormItemClick(item)"
           >
             <div class="left">
-              <img
-                :src="require(`../../static/images/home/icon-${item.key}.png`)"
-                alt=""
-              />
               <span>
-                {{ item.label }}
+                {{
+                  currentRoute.id
+                    ? `${currentRoute.code}（${currentRoute.name}）`
+                    : "请选择路线"
+                }}
               </span>
             </div>
             <u-icon
@@ -210,74 +220,48 @@
             />
           </div>
         </div>
-        <div class="canUseTips" v-if="route.id">
-          <span>{{ route.route_name }}，</span>
-          <span>剩余座位</span>
-          <span>{{ route.seat_number }}</span>
+        <div class="route" v-if="currentRoute.id">
+          <div class="route-header">
+            <div class="left">途径路线：</div>
+            <div class="right" v-if="appUser.id" @click="onNavTo">
+              <span>查看详细站点</span>
+              <u-icon name="arrow-right" color="#868686" size="28" />
+            </div>
+            <div class="right" v-else open-type="getUserInfo" @click="login">
+              <span>查看详细站点</span>
+              <u-icon name="arrow-right" color="#868686" size="28" />
+            </div>
+          </div>
+          <div class="route-content">
+            <div
+              v-for="(s, i) in stations"
+              :key="i"
+              :class="[
+                'route-content_layer',
+                i < 1 ? 'isArrived' : '',
+                i === 1 ? 'isIn' : '',
+              ]"
+            >
+              <span>{{ s.name }}</span>
+            </div>
+          </div>
         </div>
-        <u-button
-          type="primary"
-          shape="circle"
-          open-type="getUserInfo"
-          @click="login"
-          v-if="!appUser.id"
-        >
-          立即登录
-        </u-button>
-        <u-button type="primary" shape="circle" v-else @click="onOrderSubmit">
-          立即预约
-        </u-button>
       </div>
     </div>
-    <!-- <Popup
-      ref="hotelPopupRef"
-      v-model="hotelPopup.visible"
-      :dataSource="hotelPopup.data"
-      @getData="getCurrentHotelData"
-    /> -->
-    <!-- <Popup
-      v-model="storePopup.visible"
-      :dataSource="storePopup.data"
-      @getData="getCurrentStoreData"
-    /> -->
-    <u-select
-      v-model="timeSelect.visible"
-      :default-value="timeSelect.defaultValue"
-      :list="timeSelect.data"
-      @confirm="onTimeConfirm"
-    />
-    <!-- <view
-      class="u-line-1"
-      :style="{ color: item1.disabled ? '#cacaca' : '#303133' }"
-    >
-      {{ item1[labelName] }}
-    </view> -->
-    <u-select
-      v-model="reverseSelect.visible"
-      :default-value="reverseSelect.defaultValue"
-      :list="reverseSelect.data"
-      @confirm="onReverseConfirm"
-    />
     <BindMobile
       v-model="bindMobileModal.visible"
       :userProfile="bindMobileModal.userProfile"
       @getUser="getUserHandler"
     />
+
     <u-toast ref="successToastRef" />
   </app-layout>
 </template>
 
 <script>
-// import Popup from "@/components/Popup";
 import BindMobile from "@/components/BindMobile";
 import loginMixin from "@/mixins/login";
-import {
-  getRoutesRes,
-  getBannersRes,
-  getRouteNumberRes,
-  createReserveRes,
-} from "@/api";
-import dayjs from "dayjs";
+import { getBannersRes, getStaffStationsByRouteIdRes } from "@/api";
 
 export default {
   name: "Home",
@@ -285,251 +269,57 @@ export default {
   mixins: [loginMixin],
 
   components: {
-    // Popup,
     BindMobile,
   },
 
   data() {
     return {
-      searchKey: "",
       menuButtonInfo: {},
       banners: [],
-      orderFormItems: [
-        {
-          key: "store",
-          label: "选择免税店",
-        },
-        {
-          key: "hotel",
-          label: "选择乘车站",
-        },
-        {
-          key: "time",
-          label: "选择乘车时间",
-        },
-        {
-          key: "appointment",
-          label: "选择预约人数",
-        },
-      ],
-      hotelPopup: {
-        visible: false,
-        data: [],
-        currentHotel: {},
-      },
-      storePopup: {
-        visible: false,
-        data: [],
-        currentStore: {},
-      },
-      timeSelect: {
-        visible: false,
-        data: [],
-        currentTime: [],
-        defaultValue: [],
-      },
-      reverseSelect: {
-        visible: false,
-        data: [],
-        defaultValue: [],
-        number: 0,
-      },
-      route: {},
+      staffRoutes: [],
+      currentRoute: {},
+      stations: [],
     };
   },
 
+  watch: {
+    "currentRoute.id"(n, o) {
+      if (n && n !== o) {
+        this.getStaffStations();
+      }
+    },
+  },
+
   methods: {
-    onFormItemClick({ key }) {
-      if (!this.appUser.id) {
-        this.toast("请先授权登录");
-        return;
-      }
-      const { id: hotel_id, scrollTop: hotelScrollTop } =
-        this.hotelPopup.currentHotel;
-      const { id: point_id, scrollTop: storeScrollTop } =
-        this.storePopup.currentStore;
-      if (key === "store") {
-        if (point_id) {
-          this.navTo(
-            `/pages/data/store?id=${point_id}&scrollTop=${storeScrollTop}`
-          );
-        } else {
-          this.navTo(`/pages/data/store`);
-        }
-      } else if (key === "hotel") {
-        if (!point_id) {
-          this.toast("请选择免税店");
-          return;
-        }
-        if (hotel_id) {
-          this.navTo(
-            `/pages/data/hotel?pointId=${point_id}&id=${hotel_id}&scrollTop=${hotelScrollTop}`
-          );
-        } else {
-          this.navTo(`/pages/data/hotel?pointId=${point_id}`);
-        }
-      } else if (key === "time") {
-        if (!point_id) {
-          this.toast("请选择免税店");
-          return;
-        }
-        if (!hotel_id) {
-          this.toast("请选择乘车站");
-          return;
-        }
-        if (this.timeSelect.currentTime.length > 0) {
-          this.timeSelect.visible = true;
-        } else {
-          this.getRoutes(hotel_id, point_id);
-        }
-      } else if (key === "appointment") {
-        if (this.timeSelect.currentTime.length === 0) {
-          this.toast("请选择乘车时间");
-          return;
-        }
-        if (this.reverseSelect.data.length === 0) {
-          this.toast("该时间段已无剩余座位");
-          return;
-        }
-        this.reverseSelect.visible = true;
-      }
-    },
-    getCurrentHotelData(hotel) {
-      if (hotel.id !== this.hotelPopup.currentHotel.id) {
-        this.hotelPopup.currentHotel = hotel;
-        this.findOrderItem("hotel", hotel.name);
-        this.initSelectData();
-      }
-    },
-    getCurrentStoreData(store) {
-      if (store.id !== this.storePopup.currentStore.id) {
-        this.storePopup.currentStore = store;
-        this.findOrderItem("store", store.name);
-        this.hotelPopup.currentHotel = {};
-        this.findOrderItem("hotel", "选择乘车站");
-        this.initSelectData();
-      }
-    },
-    async getRoutes(hotel_id, point_id) {
-      const data = await getRoutesRes({
-        hotel_id, // 乘车站
-        point_id, // 免税店
-      });
-      if (data && data.length > 0) {
-        const currentDay = dayjs().format("YYYY-MM-DD");
-        const nextDay = dayjs().add(1, "day").format("YYYY-MM-DD");
-
-        const currentDates = [];
-        const nextDates = [];
-
-        data.forEach((x) => {
-          const currentDate = `${currentDay} ${x}`;
-          const comparedDate = dayjs(currentDate).unix();
-          const now = dayjs().unix();
-          if (comparedDate > now) {
-            currentDates.push(currentDate);
-          }
-          nextDates.push(`${nextDay} ${x}`);
-        });
-
-        this.timeSelect.data = currentDates.concat(nextDates).map((x, i) => {
-          return {
-            label: x,
-            value: i,
-          };
-        });
-        this.timeSelect.visible = true;
-      } else {
-        this.toast("暂无可预约时间");
-      }
-    },
-    onTimeConfirm([date]) {
-      this.timeSelect.currentTime = date.label.split(" ");
-      this.timeSelect.defaultValue = [date.value];
-      this.findOrderItem("time", date.label);
-      this.getRouteCanUseNumber();
-    },
-    async getRouteCanUseNumber() {
-      const { id: hotel_id } = this.hotelPopup.currentHotel;
-      const { id: point_id } = this.storePopup.currentStore;
-      const [reserve_date, reserve_time] = this.timeSelect.currentTime;
-      const data = await getRouteNumberRes({
-        hotel_id,
-        point_id,
-        reserve_date,
-        reserve_time,
-      });
-      this.route = data;
-
-      this.reverseSelect.data = [];
-      this.reverseSelect.defaultValue = [];
-      this.reverseSelect.number = 0;
-      this.findOrderItem("appointment", `选择预约人数`);
-
-      for (let i = 1; i <= data.seat_number; i++) {
-        this.reverseSelect.data.push({
-          label: i,
-          value: i,
-        });
-      }
-    },
-    onReverseConfirm([args]) {
-      this.findOrderItem("appointment", args.value);
-      this.reverseSelect.defaultValue = [args.value - 1];
-      this.reverseSelect.number = args.value;
-    },
-    findOrderItem(key, label) {
-      const scope = this.orderFormItems.find((x) => x.key === key);
-      scope.label = label;
-    },
-    initSelectData() {
-      this.timeSelect.data = [];
-      this.timeSelect.currentTime = [];
-      this.timeSelect.defaultValue = [];
-      this.route = {};
-      this.reverseSelect.data = [];
-      this.reverseSelect.defaultValue = [];
-      this.reverseSelect.number = 0;
-      this.findOrderItem("time", `选择乘车时间`);
-      this.findOrderItem("appointment", `选择预约人数`);
-    },
-    async onOrderSubmit() {
-      const { id: hotel_id, scrollTop: hotelScrollTop } =
-        this.hotelPopup.currentHotel;
-      const { id: point_id, scrollTop: pointScrollTop } =
-        this.storePopup.currentStore;
-      const [reserve_date, reserve_time] = this.timeSelect.currentTime;
-      const { number } = this.reverseSelect;
-      if (!hotel_id || !point_id || !reserve_date || !reserve_time || !number) {
-        this.toast("请填写完信息再提交");
-        return;
-      }
-      const { route_id, id: schedule_id } = this.route;
-      const reqData = {
-        hotel_id,
-        point_id,
-        reserve_date,
-        reserve_time,
-        route_id,
-        schedule_id,
-        number,
-        scroll_top: `${hotelScrollTop || 0},${pointScrollTop || 0}`,
-      };
-      await createReserveRes(reqData);
-      this.$refs.successToastRef.show({
-        title: "预约成功",
-        type: "success",
-        duration: "3000",
-      });
-      this.reverseSelect.data = [];
-      this.reverseSelect.number = 0;
-      this.reverseSelect.defaultValue = [];
-      this.findOrderItem("appointment", `选择预约人数`);
-      this.getRouteCanUseNumber();
-    },
     async getBanners() {
       const data = await getBannersRes();
       this.banners = data;
+    },
+
+    async getStaffRoutes() {
+      const data = await getStaffRoutesRes();
+      this.staffRoutes = data;
+    },
+
+    async getStaffStations() {
+      const { stationList } = await getStaffStationsByRouteIdRes(
+        this.currentRoute.id
+      );
+      this.stations = stationList.slice(0, 3);
+    },
+
+    onFormItemClick() {
+      const { id, scrollTop } = this.currentRoute;
+      if (id) this.navTo(`/pages/data/route?id=${id}&scrollTop=${scrollTop}`);
+      else this.navTo("/pages/data/route");
+    },
+
+    getCurrentRouteData(scope) {
+      this.currentRoute = scope;
+    },
+
+    onNavTo() {
+      this.navTo("/pages/route/index?id=" + this.currentRoute.id);
     },
   },
 

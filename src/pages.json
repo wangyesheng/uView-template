@@ -11,16 +11,16 @@
       }
     },
     {
+      "path": "pages/route/index",
+      "style": {
+        "navigationBarTitleText": "路线查询"
+      }
+    },
+    {
       "path": "pages/me/index",
       "style": {
         "navigationBarTitleText": "我的",
         "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/route/index",
-      "style": {
-        "navigationBarTitleText": "路线查询"
       }
     },
     {
@@ -42,18 +42,6 @@
       }
     },
     {
-      "path": "pages/order/index",
-      "style": {
-        "navigationBarTitleText": "历史预约"
-      }
-    },
-    {
-      "path": "pages/order/edition",
-      "style": {
-        "navigationBarTitleText": "编辑预约信息"
-      }
-    },
-    {
       "path": "pages/me/info",
       "style": {
         "navigationBarTitleText": "历史预约",
@@ -61,15 +49,9 @@
       }
     },
     {
-      "path": "pages/data/hotel",
+      "path": "pages/data/route",
       "style": {
-        "navigationBarTitleText": "选择乘车站"
-      }
-    },
-    {
-      "path": "pages/data/store",
-      "style": {
-        "navigationBarTitleText": "选择免税店"
+        "navigationBarTitleText": "路线列表"
       }
     }
   ],

@@ -23,42 +23,20 @@
       background: #f8fdff;
     }
     background: #fff;
-    padding: 20rpx;
+    padding: 40rpx 20rpx;
     margin-bottom: 20rpx;
     border-radius: 20rpx;
     border: 2rpx solid #fff;
     display: flex;
     align-items: center;
 
-    .left {
-      width: 120rpx;
-      height: 120rpx;
-      margin-right: 20rpx;
-
-      img {
-        border-radius: 10rpx;
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-      }
-    }
-
-    .right {
-      width: 80%;
-      .title {
-        font-size: 28rpx;
-        color: #383846;
-        margin-bottom: 10rpx;
-        font-weight: bold;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-
-      .address {
-        font-size: 24rpx;
-        color: #54545a;
-      }
+    .title {
+      font-size: 28rpx;
+      color: #383846;
+      font-weight: bold;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
   }
 }
@@ -77,28 +55,20 @@
         ]"
         hover-class="_layer-hover"
         hover-stay-time="150"
-        @click="onHotelItemClick(index)"
+        @click="onItemClick(index)"
       >
-        <div class="left">
-          <img :src="item.image" alt="" />
-        </div>
-        <div class="right">
-          <div class="title">
-            {{ item.name }}
-          </div>
-          <div class="address">{{ item.address }}</div>
-        </div>
+        <div class="title">{{ item.code }}（{{ item.name }}）</div>
       </div>
     </template>
-    <div class="no-data" v-else>暂无乘车站数据...</div>
+    <div class="no-data" v-else>暂无路线数据...</div>
   </div>
 </template>
 
 <script>
-import { getHotelsRes } from "@/api";
+import { getStaffRoutesRes } from "@/api";
 
 export default {
-  name: "Hotel",
+  name: "RouteData",
 
   data() {
     return {
@@ -108,18 +78,17 @@ export default {
   },
 
   methods: {
-    async geHotels() {
-      const data = await getHotelsRes({
-        point_id: this.pointId,
-      });
+    async getStaffRoutes() {
+      const data = await getStaffRoutesRes();
       this.dataSource = data;
     },
-    onHotelItemClick(index) {
+
+    onItemClick(index) {
       const scope = this.dataSource[index];
       this.activeId = scope.id;
       const pages = getCurrentPages();
       const prvePage = pages[pages.length - 2];
-      prvePage.$vm.getCurrentHotelData({
+      prvePage.$vm.getCurrentRouteData({
         ...scope,
         scrollTop: this.scrollTop,
       });
@@ -127,11 +96,9 @@ export default {
     },
   },
 
-  async onLoad({ pointId, id, scrollTop }) {
-    this.pointId = pointId;
-    await this.geHotels();
+  async onLoad({ id, scrollTop }) {
+    await this.getStaffRoutes();
     if (id && scrollTop) {
-      this.point_id = pointId;
       this.activeId = id;
       uni.pageScrollTo({
         duration: 100,

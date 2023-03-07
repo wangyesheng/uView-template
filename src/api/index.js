@@ -16,6 +16,33 @@ export function checkLoginRes(payload) {
   });
 }
 
+export function getStaffRoutesRes() {
+  return request({
+    url: "/api/staff_route/list",
+    method: "get",
+  });
+}
+
+export function getStaffStationsByRouteIdRes(route_id) {
+  return request({
+    url: "/api/staff_route/station_list",
+    method: "get",
+    payload: {
+      route_id,
+    },
+  });
+}
+
+export function getStaffRouteInfoByRouteIdRes(route_id) {
+  return request({
+    url: "/api/staff_route/info",
+    method: "get",
+    payload: {
+      route_id,
+    },
+  });
+}
+
 export function updateUserProfileRes(payload) {
   return request({
     url: "/api/user/profile",
