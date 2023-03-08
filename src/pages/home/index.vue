@@ -123,7 +123,7 @@
       &-content {
         margin-top: 80rpx;
         display: flex;
-        border-top: 2rpx solid #ccc;
+        border-top: 2rpx solid #158edc;
 
         &_layer {
           width: 33.333%;
@@ -143,34 +143,17 @@
             transform: translateX(-50%);
             width: 20rpx;
             height: 20rpx;
-            background: #ccc;
+            background: #158edc;
             border-radius: 50%;
           }
 
           &.isArrived {
-            &::before {
-              background: #158edc;
-            }
             &::after {
               content: "";
               position: absolute;
               top: -2rpx;
               left: 0;
               width: 100%;
-              height: 4rpx;
-              background: #158edc;
-            }
-          }
-          &.isIn {
-            &::before {
-              background: #158edc;
-            }
-            &::after {
-              content: "";
-              position: absolute;
-              top: -2rpx;
-              left: 0;
-              width: 50%;
               height: 4rpx;
               background: #158edc;
             }
@@ -238,8 +221,8 @@
               :key="i"
               :class="[
                 'route-content_layer',
-                i < 1 ? 'isArrived' : '',
-                i === 1 ? 'isIn' : '',
+                s.is_pass === 1 ? 'isArrived' : '',
+                s.arrive_time !== 0 ? 'isIn' : '',
               ]"
             >
               <span>{{ s.name }}</span>
@@ -248,6 +231,7 @@
         </div>
       </div>
     </div>
+
     <BindMobile
       v-model="bindMobileModal.visible"
       :userProfile="bindMobileModal.userProfile"

@@ -67,6 +67,18 @@
       flex-direction: column;
       border-left: 2rpx solid #ccc;
       margin: 50rpx auto 0;
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -10rpx;
+        width: 20rpx;
+        height: 20rpx;
+        background: #158edc;
+        border-radius: 50%;
+      }
 
       &_layer {
         width: 100%;
@@ -80,7 +92,9 @@
         &_title {
           display: flex;
           flex-direction: column;
-          height: 150rpx;
+          position: absolute;
+          left: 50rpx;
+          bottom: -30rpx;
 
           span {
             &:first-child {
@@ -101,7 +115,7 @@
           content: "";
           position: absolute;
           left: -10rpx;
-          top: 0;
+          bottom: 0;
           width: 20rpx;
           height: 20rpx;
           background: #ccc;
@@ -130,7 +144,9 @@
         }
 
         .extra-info {
-          flex: 1;
+          position: absolute;
+          left: 50rpx;
+          top: 50rpx;
           font-size: 28rpx;
           font-weight: 400;
           color: #15d6dc;
@@ -143,15 +159,15 @@
           }
 
           .next-station {
-            margin-top: 20rpx;
+            margin-top: 10rpx;
           }
 
           img {
             width: 46rpx;
             height: 46rpx;
             position: absolute;
-            top: 170rpx;
-            left: -25rpx;
+            top: 0rpx;
+            left: -74rpx;
           }
         }
       }
@@ -192,20 +208,19 @@
           :key="`${station.id}_${j}`"
           :class="[
             'route-content_layer',
-            j < 2 ? 'isArrived' : '',
-            j === 2 ? 'isIn' : '',
+            station.is_pass === 1 ? 'isArrived' : '',
           ]"
         >
           <div class="route-content_layer_title">
             <span>{{ station.name }}</span>
             <span>{{ station.traintime }}</span>
           </div>
-          <div class="extra-info" v-if="j === 2">
+          <div class="extra-info" v-if="station.arrive_time !== 0">
             <img src="../../static/images/route/icon-car.png" alt="" />
             <div class="arrive-info">
               <div class="arrive-car">
-                <span>预计10分钟到达下一站</span>
-                <span>车牌号：苏B 23893</span>
+                <span>预计{{ station.arrive_time }}到达下一站</span>
+                <span>车牌号：{{ station.vehicle_code }}</span>
               </div>
             </div>
             <div class="next-station">下一站</div>
@@ -241,10 +256,9 @@ export default {
 
   methods: {
     async getStaffRouteInfo() {
-      const data = await getStaffRouteInfoByRouteIdRes(1);
+      const data = await getStaffRouteInfoByRouteIdRes(this.id);
       this.rawRouteInfos = data;
       this.routeInfo = data[0];
-      console.log(this.routeInfo);
       this.select.data = data.map((x, i) => ({
         label: x.name,
         value: i,
@@ -261,6 +275,7 @@ export default {
   },
 
   onLoad({ id }) {
+    this.id = id;
     this.getStaffRouteInfo();
   },
 };
