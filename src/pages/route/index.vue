@@ -58,10 +58,11 @@
     }
     .u-time-axis-node {
       background-color: #158edc;
+      border-radius: 50%;
       .u-dot {
         width: 20rpx;
         height: 20rpx;
-        background: #158edc;
+        background: transparent;
       }
     }
 
@@ -69,6 +70,10 @@
       font-size: 30rpx;
       font-weight: bold;
       color: #484848;
+
+      &.isIn {
+        color: #15d6dc;
+      }
     }
 
     .u-order-time {
@@ -137,11 +142,15 @@
           <u-time-line-item
             v-for="layer in route.items"
             :key="`${layer.id}-${i}`"
+            :bg-color="layer.is_select === 1 ? '#15D6DC' : '#158edc'"
           >
             <template v-slot:content>
               <view>
-                <view class="u-order-desc">{{ layer.name }}</view>
-                <view class="u-order-time">
+                <view
+                  :class="['u-order-desc', layer.is_select === 1 ? 'isIn' : '']"
+                  >{{ layer.name }}</view
+                >
+                <view class="u-order-time" v-if="layer.traintime">
                   <text>发车时间：</text>
                   <text> {{ layer.traintime.join("、") }} </text>
                 </view>
@@ -240,6 +249,12 @@ export default {
           hotel_id,
           point_id,
         });
+        data[0] &&
+          data[0].items &&
+          data[0].items.push({
+            ...this.storePopup.currentStore,
+            is_select: 0,
+          });
         this.routes = data;
       }
     },

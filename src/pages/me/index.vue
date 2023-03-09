@@ -459,7 +459,7 @@ export default {
 
   watch: {
     appUser(n, o) {
-      if (n.id !== o.id) this.getLastestReserve();
+      if (n.id && n.id !== o.id) this.getLastestReserve();
     },
   },
 
