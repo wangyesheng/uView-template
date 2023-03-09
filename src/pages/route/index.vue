@@ -1,6 +1,6 @@
 <style lang="scss" scoped>
 .route-wrap {
-  padding: 40rpx;
+  padding: 40rpx 40rpx 100rpx;
   box-sizing: border-box;
   position: relative;
   .select-wrap {
@@ -94,7 +94,7 @@
           flex-direction: column;
           position: absolute;
           left: 50rpx;
-          bottom: -30rpx;
+          bottom: -60rpx;
 
           span {
             &:first-child {
@@ -123,6 +123,7 @@
         }
 
         &.isArrived {
+          height: 200rpx !important;
           &::before {
             background: #158edc;
           }
@@ -137,16 +138,10 @@
           }
         }
 
-        &.isIn {
-          &::before {
-            background: #158edc;
-          }
-        }
-
         .extra-info {
           position: absolute;
           left: 50rpx;
-          top: 50rpx;
+          top: 90rpx;
           font-size: 28rpx;
           font-weight: 400;
           color: #15d6dc;
@@ -166,7 +161,7 @@
             width: 46rpx;
             height: 46rpx;
             position: absolute;
-            top: 0rpx;
+            top: 20rpx;
             left: -74rpx;
           }
         }
@@ -275,7 +270,7 @@ export default {
   },
 
   onLoad({ id }) {
-    this.id = id;
+    this.id = 1;
     this.getStaffRouteInfo();
   },
 };
