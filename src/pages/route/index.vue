@@ -254,6 +254,7 @@ export default {
       const data = await getStaffRouteInfoByRouteIdRes(this.id);
       this.rawRouteInfos = data;
       this.routeInfo = data[0];
+      this.select.selectValue = this.routeInfo.name;
       this.select.data = data.map((x, i) => ({
         label: x.name,
         value: i,
@@ -270,7 +271,7 @@ export default {
   },
 
   onLoad({ id }) {
-    this.id = 1;
+    this.id = id;
     this.getStaffRouteInfo();
   },
 };

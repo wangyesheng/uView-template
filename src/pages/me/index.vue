@@ -339,7 +339,6 @@
 import BindMobile from "@/components/BindMobile";
 import loginMixin from "@/mixins/login";
 import {
-  getLastestReserveRes,
   cancelReserveRes,
   getCustomerPhoneRes,
   updateUserProfileRes,
@@ -380,12 +379,6 @@ export default {
     },
   },
 
-  watch: {
-    appUser(n, o) {
-      if (n.id !== o.id) this.getLastestReserve();
-    },
-  },
-
   methods: {
     onFunctionClick(key) {
       if (!this.appUser.id) {
@@ -421,21 +414,6 @@ export default {
       await updateUserProfileRes({ avatar: this.appUser.avatar });
       uni.setStorageSync("APP_USER", this.appUser);
     },
-    async getLastestReserve() {
-      const data = await getLastestReserveRes();
-      this.lastestReserve = {
-        ...data,
-        _statusMap: {
-          label:
-            data.status == 0
-              ? "等待中..."
-              : data.status == 1
-              ? "已完成"
-              : "已取消",
-          color: data.status == 0 ? "#1FAE8E" : "#AAA",
-        },
-      };
-    },
     async cancelReserve(reserve_id) {
       uni.showModal({
         title: "提示",
@@ -448,10 +426,6 @@ export default {
         },
       });
     },
-  },
-
-  onShow() {
-    if (this.appUser.id) this.getLastestReserve();
   },
 };
 </script>

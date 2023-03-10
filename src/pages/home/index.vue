@@ -34,7 +34,7 @@
   .order-form-wrap {
     width: 100%;
     background: #fff;
-    border-radius: 68rpx;
+    border-radius: 24rpx;
     padding-top: 46rpx;
     padding-left: 44rpx;
     padding-right: 44rpx;
@@ -237,8 +237,6 @@
       :userProfile="bindMobileModal.userProfile"
       @getUser="getUserHandler"
     />
-
-    <u-toast ref="successToastRef" />
   </app-layout>
 </template>
 
