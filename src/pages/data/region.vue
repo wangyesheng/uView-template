@@ -17,7 +17,6 @@
   ._layer {
     &.active {
       border: 2rpx solid #158edc;
-      background: #f8fdff;
     }
 
     &-hover {
@@ -29,7 +28,6 @@
     border-radius: 20rpx;
     border: 2rpx solid #fff;
     display: flex;
-    justify-content: space-between;
     align-items: center;
 
     .title {
@@ -46,9 +44,9 @@
 
 <template>
   <div class="_wrap">
-    <template v-if="route.list && route.list.length > 0">
+    <template v-if="dataSource.length > 0">
       <div
-        v-for="item in route.list"
+        v-for="(item, index) in dataSource"
         :key="item.id"
         :class="[
           '_layer',
@@ -57,50 +55,60 @@
         ]"
         hover-class="_layer-hover"
         hover-stay-time="150"
-        @click="onItemClick(item)"
+        @click="onItemClick(index)"
       >
         <div class="title">{{ item.name }}</div>
-        <u-icon name="arrow-right"></u-icon>
       </div>
     </template>
-    <div class="no-data" v-else>暂无路线数据...</div>
+    <div class="no-data" v-else>暂无地区数据...</div>
   </div>
 </template>
 
 <script>
-import { getRoutesRes } from "@/api";
+import { getRegionsRes } from "@/api";
 
 export default {
-  name: "Route",
+  name: "Region",
 
   data() {
     return {
       activeId: -1,
-      route: {},
+      dataSource: [],
     };
   },
 
   methods: {
-    async getRoutes() {
-      const data = await getRoutesRes({
-        group_id: this.group_id,
-        region_id: this.region_id,
-      });
-      this.route = data;
+    async getRegions() {
+      const data = await getRegionsRes();
+      this.dataSource = data;
     },
 
-    onItemClick(scope) {
+    onItemClick(index) {
+      const scope = this.dataSource[index];
       this.activeId = scope.id;
-      this.navTo(
-        `/pages/form/schedule?group_id=${scope.group_id}&route_id=${scope.id}`
-      );
+      const pages = getCurrentPages();
+      const prvePage = pages[pages.length - 2];
+      prvePage.$vm.getCurrentRegionData({
+        ...scope,
+        scrollTop: this.scrollTop,
+      });
+      uni.navigateBack();
     },
   },
 
-  onLoad({ group_id, region_id }) {
-    this.group_id = group_id;
-    this.region_id = region_id;
-    this.getRoutes();
+  async onLoad({ id, scrollTop }) {
+    await this.getRegions();
+    if (id && scrollTop) {
+      this.activeId = id;
+      uni.pageScrollTo({
+        duration: 100,
+        scrollTop: Number(scrollTop),
+      });
+    }
+  },
+
+  onPageScroll(e) {
+    this.scrollTop = e.scrollTop;
   },
 };
 </script>

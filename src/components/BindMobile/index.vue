@@ -41,7 +41,7 @@ export default {
         encrypted_data,
         iv,
         code: this.userProfile.code,
-        group_id: 2,
+        group_id: 3,
       });
       await this.checkLogin(JSON.parse(data), openid);
     },
@@ -51,7 +51,7 @@ export default {
         nickname: this.userProfile.current.nickName,
         avatar: this.userProfile.current.avatarUrl,
         mobile: phoneInfo.phoneNumber,
-        group_id: 2, // 员工端
+        group_id: 3, // 员工端
       };
       const { userinfo } = await checkLoginRes(reqData);
       const appUser = {

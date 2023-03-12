@@ -11,6 +11,36 @@
       }
     },
     {
+      "path": "pages/data/report",
+      "style": {
+        "navigationBarTitleText": "历史填报数据"
+      }
+    },
+    {
+      "path": "pages/form/details",
+      "style": {
+        "navigationBarTitleText": "查看填写内容"
+      }
+    },
+    {
+      "path": "pages/form/success",
+      "style": {
+        "navigationBarTitleText": "填写成功"
+      }
+    },
+    {
+      "path": "pages/form/index",
+      "style": {
+        "navigationBarTitleText": "填写"
+      }
+    },
+    {
+      "path": "pages/form/schedule",
+      "style": {
+        "navigationBarTitleText": "选择路线"
+      }
+    },
+    {
       "path": "pages/route/index",
       "style": {
         "navigationBarTitleText": "路线查询"
@@ -46,6 +76,12 @@
       "style": {
         "navigationBarTitleText": "历史预约",
         "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/region",
+      "style": {
+        "navigationBarTitleText": "地区列表"
       }
     },
     {

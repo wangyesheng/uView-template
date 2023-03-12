@@ -136,6 +136,24 @@
     margin-left: 128rpx;
   }
 }
+
+.content.noLogin {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  .role-type {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    span {
+      margin-left: 0;
+    }
+  }
+}
 </style>
 
 <template>
@@ -146,14 +164,17 @@
           <p>乘车数据</p>
           <p>报告平台</p>
         </div>
-        <div class="select-wrap">
+        <div class="select-wrap" v-if="appUser.id">
           <div
             class="select-item"
             hover-class="select-item-hover"
             hover-stay-time="150"
+            @click="onFormItemClick"
           >
             <div class="left">
-              <span> 请选择班次 </span>
+              <span>
+                {{ currentRegion.name ? currentRegion.name : "请选择班次" }}
+              </span>
             </div>
             <u-icon
               color="#000"
@@ -163,9 +184,11 @@
           </div>
         </div>
         <div
+          v-if="appUser.id"
           class="role-type"
           hover-class="role-type-hover"
           hover-stay-time="150"
+          @click="onNavTo(2)"
         >
           <img
             class="staff"
@@ -176,11 +199,12 @@
         </div>
       </div>
     </div>
-    <div class="content">
+    <div class="content" v-if="appUser.id">
       <div
         class="role-type"
         hover-class="role-type-hover"
         hover-stay-time="150"
+        @click="onNavTo(1)"
       >
         <img src="../../static/images/home/icon-tourist.png" alt="" />
         <span>游客巴士</span>
@@ -190,25 +214,40 @@
         class="btn-history"
         hover-class="btn-history-hover"
         hover-stay-time="150"
+        @click="navTo(`/pages/data/report`)"
       >
         查看历史数据
       </div>
     </div>
+
+    <div class="content noLogin" v-if="!appUser.id">
+      <div
+        class="role-type"
+        hover-class="role-type-hover"
+        hover-stay-time="150"
+        @click="login"
+      >
+        <span>立即登录</span>
+      </div>
+    </div>
+    <u-select
+      v-model="select.visible"
+      :default-value="select.defaultIndex"
+      :list="select.data"
+      @confirm="onSelectConfirm"
+    />
 
     <BindMobile
       v-model="bindMobileModal.visible"
       :userProfile="bindMobileModal.userProfile"
       @getUser="getUserHandler"
     />
-
-    <u-toast ref="successToastRef" />
   </app-layout>
 </template>
 
 <script>
 import BindMobile from "@/components/BindMobile";
 import loginMixin from "@/mixins/login";
-import { getBannersRes, getStaffStationsByRouteIdRes } from "@/api";
 
 export default {
   name: "Home",
@@ -222,10 +261,7 @@ export default {
   data() {
     return {
       menuButtonInfo: {},
-      banners: [],
-      staffRoutes: [],
-      currentRoute: {},
-      stations: [],
+      currentRegion: {},
     };
   },
 
@@ -236,43 +272,31 @@ export default {
   },
 
   watch: {
-    "currentRoute.id"(n, o) {
+    "currentRegion.id"(n, o) {
       if (n && n !== o) {
-        this.getStaffStations();
       }
     },
   },
 
   methods: {
-    async getBanners() {
-      const data = await getBannersRes();
-      this.banners = data;
-    },
-
-    async getStaffRoutes() {
-      const data = await getStaffRoutesRes();
-      this.staffRoutes = data;
-    },
-
-    async getStaffStations() {
-      const { stationList } = await getStaffStationsByRouteIdRes(
-        this.currentRoute.id
-      );
-      this.stations = stationList.slice(0, 3);
-    },
-
     onFormItemClick() {
-      const { id, scrollTop } = this.currentRoute;
-      if (id) this.navTo(`/pages/data/route?id=${id}&scrollTop=${scrollTop}`);
-      else this.navTo("/pages/data/route");
+      const { id, scrollTop } = this.currentRegion;
+      if (id) this.navTo(`/pages/data/region?id=${id}&scrollTop=${scrollTop}`);
+      else this.navTo("/pages/data/region");
     },
 
-    getCurrentRouteData(scope) {
-      this.currentRoute = scope;
+    getCurrentRegionData(scope) {
+      this.currentRegion = scope;
     },
 
-    onNavTo() {
-      this.navTo("/pages/route/index?id=" + this.currentRoute.id);
+    onNavTo(id) {
+      if (!this.currentRegion.id) {
+        this.toast("请先选择地区");
+        return;
+      }
+      this.navTo(
+        `/pages/data/route?group_id=${id}&region_id=${this.currentRegion.id}`
+      );
     },
   },
 
@@ -282,7 +306,6 @@ export default {
         this.menuButtonInfo = uni.getMenuButtonBoundingClientRect();
       },
     });
-    this.getBanners();
   },
 };
 </script>

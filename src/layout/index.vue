@@ -1,7 +1,8 @@
 <style lang="scss" scoped>
 .layout-wrap {
-  position: relative;
   width: 100%;
+  min-height: 100vh;
+  position: relative;
 }
 </style>
 
@@ -9,7 +10,6 @@
   <div
     class="layout-wrap"
     :style="{
-      minHeight: sysHeight + 'px',
       background: background,
     }"
   >
@@ -33,12 +33,6 @@ export default {
 
   components: {
     Tabbar,
-  },
-
-  computed: {
-    sysHeight() {
-      return this.getSysHeight();
-    },
   },
 };
 </script>

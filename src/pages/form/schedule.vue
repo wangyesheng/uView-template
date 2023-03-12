@@ -15,21 +15,24 @@
   }
 
   ._layer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
     &.active {
       border: 2rpx solid #158edc;
-      background: #f8fdff;
     }
 
     &-hover {
       background: #f8fdff;
     }
+
     background: #fff;
     padding: 40rpx 20rpx;
     margin-bottom: 20rpx;
     border-radius: 20rpx;
     border: 2rpx solid #fff;
     display: flex;
-    justify-content: space-between;
     align-items: center;
 
     .title {
@@ -39,6 +42,7 @@
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
+      width: 80%;
     }
   }
 }
@@ -46,9 +50,9 @@
 
 <template>
   <div class="_wrap">
-    <template v-if="route.list && route.list.length > 0">
+    <template v-if="schedules.length > 0">
       <div
-        v-for="item in route.list"
+        v-for="item in schedules"
         :key="item.id"
         :class="[
           '_layer',
@@ -57,10 +61,11 @@
         ]"
         hover-class="_layer-hover"
         hover-stay-time="150"
-        @click="onItemClick(item)"
       >
         <div class="title">{{ item.name }}</div>
-        <u-icon name="arrow-right"></u-icon>
+        <u-button type="primary" size="mini" @click="onNavTo(item)"
+          >填写</u-button
+        >
       </div>
     </template>
     <div class="no-data" v-else>暂无路线数据...</div>
@@ -68,7 +73,7 @@
 </template>
 
 <script>
-import { getRoutesRes } from "@/api";
+import { getSchedulesRes } from "@/api";
 
 export default {
   name: "Route",
@@ -76,31 +81,30 @@ export default {
   data() {
     return {
       activeId: -1,
-      route: {},
+      schedules: [],
     };
   },
 
   methods: {
-    async getRoutes() {
-      const data = await getRoutesRes({
+    async getSchedules() {
+      this.schedules = await getSchedulesRes({
         group_id: this.group_id,
-        region_id: this.region_id,
+        route_id: this.route_id,
       });
-      this.route = data;
     },
 
-    onItemClick(scope) {
+    onNavTo(scope) {
       this.activeId = scope.id;
       this.navTo(
-        `/pages/form/schedule?group_id=${scope.group_id}&route_id=${scope.id}`
+        `/pages/form/index?group_id=${scope.group_id}&schedule_id=${scope.id}`
       );
     },
   },
 
-  onLoad({ group_id, region_id }) {
+  onLoad({ group_id, route_id }) {
     this.group_id = group_id;
-    this.region_id = region_id;
-    this.getRoutes();
+    this.route_id = route_id;
+    this.getSchedules();
   },
 };
 </script>

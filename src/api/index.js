@@ -16,6 +16,60 @@ export function checkLoginRes(payload) {
   });
 }
 
+export function getRegionsRes() {
+  return request({
+    url: "/api/region/list",
+    method: "get",
+  });
+}
+
+export function getRoutesRes(payload) {
+  return request({
+    url: "/api/driver_route/getRouteList",
+    method: "get",
+    payload,
+  });
+}
+
+export function getSchedulesRes(payload) {
+  return request({
+    url: "/api/driver_route/scheduleList",
+    method: "get",
+    payload,
+  });
+}
+
+export function getRouteInfoRes(payload) {
+  return request({
+    url: "/api/driver_route/routeInfo",
+    method: "get",
+    payload,
+  });
+}
+
+export function createReportDataRes(payload) {
+  return request({
+    url: "/api/driver_route/createInfo",
+    method: "post",
+    payload,
+  });
+}
+
+export function getReportsRes() {
+  return request({
+    url: "/api/driver_route/reportList",
+    method: "get",
+  });
+}
+
+export function getReportByIdRes(report_id) {
+  return request({
+    url: "/api/driver_route/reportInfo",
+    method: "get",
+    payload: { report_id },
+  });
+}
+
 export function getStaffRoutesRes() {
   return request({
     url: "/api/staff_route/list",
@@ -90,14 +144,6 @@ export function getPointsRes() {
   return request({
     url: "/api/point/list",
     method: "get",
-  });
-}
-
-export function getRoutesRes(payload) {
-  return request({
-    url: "/api/route/getRouteList",
-    method: "get",
-    payload,
   });
 }
 
