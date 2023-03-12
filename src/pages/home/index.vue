@@ -135,6 +135,14 @@
           font-weight: 400;
           color: #383846;
 
+          img {
+            width: 32rpx;
+            height: 32rpx;
+            position: absolute;
+            top: -36rpx;
+            right: 0;
+          }
+
           &::before {
             content: "";
             position: absolute;
@@ -207,15 +215,15 @@
           <div class="route-header">
             <div class="left">途径路线：</div>
             <div class="right" v-if="appUser.id" @click="onNavTo">
-              <span>查看详细站点</span>
+              <span>查看详情</span>
               <u-icon name="arrow-right" color="#868686" size="28" />
             </div>
             <div class="right" v-else open-type="getUserInfo" @click="login">
-              <span>查看详细站点</span>
+              <span>查看详情</span>
               <u-icon name="arrow-right" color="#868686" size="28" />
             </div>
           </div>
-          <div class="route-content">
+          <div class="route-content" v-if="appUser.id" @click="onNavTo">
             <div
               v-for="(s, i) in stations"
               :key="i"
@@ -226,6 +234,34 @@
               ]"
             >
               <span>{{ s.name }}</span>
+              <img
+                v-if="i == 2"
+                src="../../static/images/home/arrow-right.png"
+                alt=""
+              />
+            </div>
+          </div>
+          <div
+            class="route-content"
+            v-else
+            open-type="getUserInfo"
+            @click="login"
+          >
+            <div
+              v-for="(s, i) in stations"
+              :key="i"
+              :class="[
+                'route-content_layer',
+                s.is_pass === 1 ? 'isArrived' : '',
+                s.arrive_time !== 0 ? 'isIn' : '',
+              ]"
+            >
+              <span>{{ s.name }}</span>
+              <img
+                v-if="i == 2"
+                src="../../static/images/home/arrow-right.png"
+                alt=""
+              />
             </div>
           </div>
         </div>

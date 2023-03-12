@@ -74,7 +74,7 @@ export function getAboutRes() {
 
 export function getBannersRes() {
   return request({
-    url: "/api/banner/list",
+    url: "/api/banner/list?type=2",
     method: "get",
   });
 }
