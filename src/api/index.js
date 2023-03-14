@@ -16,6 +16,13 @@ export function checkLoginRes(payload) {
   });
 }
 
+export function getUserInfoRes() {
+  return request({
+    url: "/api/user/info",
+    method: "get",
+  });
+}
+
 export function getRegionsRes() {
   return request({
     url: "/api/region/list",
@@ -50,6 +57,14 @@ export function getRouteInfoRes(payload) {
 export function createReportDataRes(payload) {
   return request({
     url: "/api/driver_route/createInfo",
+    method: "post",
+    payload,
+  });
+}
+
+export function updateReportDataRes(payload) {
+  return request({
+    url: "/api/driver_route/updateInfo",
     method: "post",
     payload,
   });

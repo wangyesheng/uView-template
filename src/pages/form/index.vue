@@ -116,8 +116,8 @@
   <div class="form-wrap">
     <u-form ref="formRef" label-width="auto" :model="formData">
       <u-form-item label="姓名：">
-        <u-input disabled v-model="routeInfo.scheduleInfo.driver_name"
-      /></u-form-item>
+        <u-input v-model="driver_name" />
+      </u-form-item>
       <u-form-item label="车牌：">
         <div class="car-number-wrap">
           <div class="car-number-inner">
@@ -178,27 +178,42 @@
 
 <script>
 import dayjs from "dayjs";
-import { getRouteInfoRes, createReportDataRes } from "@/api";
+import {
+  getRouteInfoRes,
+  createReportDataRes,
+  getReportByIdRes,
+  updateReportDataRes,
+} from "@/api";
 
 export default {
   name: "Form",
 
   data() {
     return {
+      driver_name: "",
       routeInfo: {},
       reportDatePicker: {
         visible: false,
         selectedTime: dayjs().format("YYYY-MM-DD"),
       },
+      report: {},
     };
   },
 
   methods: {
+    async getReport() {
+      const data = await getReportByIdRes(this.report_id);
+      this.report = data;
+    },
     async getRouteInfo() {
       const data = await getRouteInfoRes({
         group_id: this.group_id,
         schedule_id: this.schedule_id,
       });
+      if (this.report.info) {
+        this.driver_name = this.report.info.driver_name;
+        this.reportDatePicker.selectedTime = this.report.info.report_date;
+      }
       if (data.scheduleInfo) {
         data.scheduleInfo = {
           ...data.scheduleInfo,
@@ -207,10 +222,19 @@ export default {
       }
 
       if (data.list) {
-        data.list = data.list.map((x) => ({
-          ...x,
-          value: 0,
-        }));
+        data.list = data.list.map((x) => {
+          const target = {
+            ...x,
+            value: 0,
+          };
+          if (this.report.items) {
+            const scope = this.report.items.find(
+              (y) => y.station_id === x.data_id
+            );
+            target.value = scope.report_num || 0;
+          }
+          return target;
+        });
       }
       this.routeInfo = data;
     },
@@ -219,6 +243,10 @@ export default {
       this[`reportDatePicker`].selectedTime = dayjs(_time).format("YYYY-MM-DD");
     },
     async onSubmit() {
+      if (!this.driver_name) {
+        this.toast("请输入姓名");
+        return;
+      }
       uni.showModal({
         title: "确认要提交吗？",
         success: async ({ confirm }) => {
@@ -227,25 +255,46 @@ export default {
             this.routeInfo.list.forEach((x) => {
               data_info[x.data_id] = x.value;
             });
+
             const reqData = {
-              group_id: this.group_id,
-              schedule_id: this.schedule_id,
+              driver_name: this.driver_name,
               report_date: this.reportDatePicker.selectedTime,
               data_info: JSON.stringify(data_info),
             };
-            const data = await createReportDataRes(reqData);
-            console.log(data);
-            this.navTo(`/pages/form/success?report_id=${data.report_id}`);
+            if (this.report_id) {
+              reqData.report_id = this.report_id;
+            } else {
+              reqData.group_id = this.group_id;
+              reqData.schedule_id = this.schedule_id;
+            }
+
+            const data = this.report_id
+              ? await updateReportDataRes(reqData)
+              : await createReportDataRes(reqData);
+            if (!this.report_id) {
+              this.navTo(`/pages/form/success?report_id=${data.report_id}`);
+            } else {
+              this.toast("编辑成功");
+              uni.navigateBack();
+            }
           }
         },
       });
     },
   },
 
-  onLoad({ group_id = 1, schedule_id = 53 }) {
+  async onLoad({ group_id = 1, schedule_id = 53, report_id }) {
     this.group_id = group_id;
     this.schedule_id = schedule_id;
-    this.getRouteInfo();
+    if (report_id) {
+      this.report_id = report_id;
+      uni.setNavigationBarTitle({
+        title: "编辑",
+      });
+      await this.getReport();
+    }
+
+    await this.getRouteInfo();
   },
 };
 </script>

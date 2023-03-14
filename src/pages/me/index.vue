@@ -41,7 +41,12 @@
           color: #373741;
         }
 
-        .role {
+        .tags {
+          ::v-deep {
+            .u-tag {
+              margin-right: 20rpx;
+            }
+          }
           // width: 106rpx;
           // height: 28rpx;
           // background: ;
@@ -292,7 +297,26 @@
           />
           <div class="right">
             <span class="mobile">{{ appUser.mobile }}</span>
-            <u-tag :text="appUser.role" mode="dark" />
+            <div class="tags">
+              <u-tag :text="appUser.role" mode="dark" />
+              <u-tag
+                mode="light"
+                :text="
+                  appUser.is_check == 0
+                    ? '待审核'
+                    : appUser.is_check == 1
+                    ? '已审核'
+                    : '审核不通过'
+                "
+                :type="
+                  appUser.is_check == 0
+                    ? 'info'
+                    : appUser.is_check == 1
+                    ? 'success'
+                    : 'error'
+                "
+              />
+            </div>
           </div>
         </div>
 

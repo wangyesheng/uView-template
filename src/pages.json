@@ -23,21 +23,21 @@
       }
     },
     {
-      "path": "pages/form/success",
-      "style": {
-        "navigationBarTitleText": "填写成功"
-      }
-    },
-    {
       "path": "pages/form/index",
       "style": {
         "navigationBarTitleText": "填写"
       }
     },
     {
+      "path": "pages/form/success",
+      "style": {
+        "navigationBarTitleText": "结果页"
+      }
+    },
+    {
       "path": "pages/form/schedule",
       "style": {
-        "navigationBarTitleText": "选择路线"
+        "navigationBarTitleText": "选择"
       }
     },
     {
@@ -74,8 +74,7 @@
     {
       "path": "pages/me/info",
       "style": {
-        "navigationBarTitleText": "历史预约",
-        "navigationStyle": "custom"
+        "navigationBarTitleText": "关于平台"
       }
     },
     {

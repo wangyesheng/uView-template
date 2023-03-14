@@ -214,7 +214,7 @@
         class="btn-history"
         hover-class="btn-history-hover"
         hover-stay-time="150"
-        @click="navTo(`/pages/data/report`)"
+        @click="onNavTo(3)"
       >
         查看历史数据
       </div>
@@ -248,6 +248,7 @@
 <script>
 import BindMobile from "@/components/BindMobile";
 import loginMixin from "@/mixins/login";
+import { getUserInfoRes } from "@/api";
 
 export default {
   name: "Home",
@@ -280,6 +281,10 @@ export default {
 
   methods: {
     onFormItemClick() {
+      if (this.appUser.is_check != 1) {
+        this.toast("账号暂未通过审核，请联系管理员");
+        return;
+      }
       const { id, scrollTop } = this.currentRegion;
       if (id) this.navTo(`/pages/data/region?id=${id}&scrollTop=${scrollTop}`);
       else this.navTo("/pages/data/region");
@@ -290,6 +295,14 @@ export default {
     },
 
     onNavTo(id) {
+      if (this.appUser.is_check != 1) {
+        this.toast("账号暂未通过审核，请联系管理员");
+        return;
+      }
+      if (id === 3) {
+        this.navTo(`/pages/data/report`);
+        return;
+      }
       if (!this.currentRegion.id) {
         this.toast("请先选择地区");
         return;
@@ -300,12 +313,22 @@ export default {
     },
   },
 
-  onLoad() {
+  async onLoad() {
     uni.getSystemInfo({
       success: () => {
         this.menuButtonInfo = uni.getMenuButtonBoundingClientRect();
       },
     });
+    const _appUser = this.getAppUser();
+    if (_appUser.id) {
+      const data = await getUserInfoRes();
+      const newUser = {
+        ..._appUser,
+        is_check: data.is_check,
+      };
+      uni.setStorageSync("APP_USER", newUser);
+      this.appUser = newUser;
+    }
   },
 };
 </script>

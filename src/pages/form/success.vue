@@ -60,7 +60,6 @@ export default {
   },
 
   onLoad({ report_id = 2 }) {
-    console.log(report_id);
     this.report_id = report_id;
   },
 };

@@ -12,10 +12,27 @@
       font-weight: bold;
       color: #296ac9;
       margin-bottom: 20rpx;
+      margin-top: 50rpx;
     }
 
     .report-layer {
       margin-bottom: 20rpx;
+      padding: 20rpx 0;
+
+      &.withBorder {
+        border-bottom: 2rpx solid #ddd;
+        display: flex;
+        justify-content: space-between;
+
+        .label {
+          display: block;
+          width: 90%;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+      }
+
       .label {
         font-size: 30rpx;
         font-weight: 400;
@@ -32,10 +49,10 @@
 
   .back {
     position: fixed;
-    right: 40rpx;
-    bottom: 200rpx;
-    width: 120rpx;
-    height: 120rpx;
+    right: 100rpx;
+    bottom: 100rpx;
+    width: 100rpx;
+    height: 100rpx;
     background: #fff;
     border-radius: 50%;
     display: flex;
@@ -74,8 +91,12 @@
         {{ report.info.route_name }}
       </div>
 
-      <div class="report-layer" v-for="(item, i) in report.items" :key="i">
-        <span class="label">{{ item.station_name }}：</span>
+      <div
+        class="report-layer withBorder"
+        v-for="(item, i) in report.items"
+        :key="i"
+      >
+        <span class="label">{{ item.station_name }}</span>
         <span class="value">{{ item.report_num }}人</span>
       </div>
     </div>
@@ -83,7 +104,7 @@
       class="back"
       hover-class="back-hover"
       hover-stay-time="150"
-      @click="navTo('/pages/home/index')"
+      @click="onSwitchToHome"
     >
       <img src="../../static/images/home.png" alt="" />
     </div>
@@ -102,7 +123,15 @@ export default {
     };
   },
 
-  async onLoad({ report_id = 5 }) {
+  methods: {
+    onSwitchToHome() {
+      uni.switchTab({
+        url: "/pages/home/index",
+      });
+    },
+  },
+
+  async onLoad({ report_id = 6 }) {
     const data = await getReportByIdRes(report_id);
     this.report = data;
   },
