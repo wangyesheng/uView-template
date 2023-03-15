@@ -541,5 +541,21 @@ export default {
     });
     this.getBanners();
   },
+
+  onShareAppMessage() {
+    return {
+      title: "cdf免费穿梭巴士预约",
+      path: "/pages/home/index",
+      imageUrl: "../../static/images/home/share.jpg",
+    };
+  },
+
+  onShareTimeline() {
+    return {
+      title: "cdf免费穿梭巴士预约",
+      path: "/pages/home/index",
+      imageUrl: "../../static/images/home/share.jpg",
+    };
+  },
 };
 </script>
