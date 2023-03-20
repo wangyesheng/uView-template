@@ -9,8 +9,20 @@
 
   ::v-deep {
     .u-form {
+      .u-form-item {
+        padding: 20rpx;
+        border-radius: 10rpx;
+        border: 2rpx solid #f9f9fd;
+      }
+      u-form-item.active {
+        .u-form-item {
+          border: 2rpx solid #ff0000;
+        }
+      }
+
       .u-input__input {
         font-weight: 550;
+        font-size: 32rpx;
       }
     }
 
@@ -115,10 +127,17 @@
 <template>
   <div class="form-wrap">
     <u-form ref="formRef" label-width="auto" :model="formData">
-      <u-form-item label="姓名：">
-        <u-input v-model="driver_name" />
+      <u-form-item
+        label="姓名："
+        :class="hadNotWriteDriverName ? 'active' : ''"
+        :label-style="{
+          fontSize: '32rpx',
+          fontWeight: 550,
+        }"
+      >
+        <u-input placeholder="请输入司机姓名" v-model="driver_name" />
       </u-form-item>
-      <u-form-item label="车牌：">
+      <!-- <u-form-item label="车牌：">
         <div class="car-number-wrap">
           <div class="car-number-inner">
             <div
@@ -130,14 +149,12 @@
             </div>
           </div>
         </div>
-      </u-form-item>
-      <u-form-item label="日期：">
-        <u-input
-          disabled
-          type="select"
-          v-model="reportDatePicker.selectedTime"
-          @click="reportDatePicker.visible = true"
-        />
+      </u-form-item> -->
+      <u-form-item
+        label="日期："
+        :label-style="{ fontSize: '32rpx', fontWeight: 550 }"
+      >
+        <u-input disabled v-model="reportDatePicker.selectedTime" />
       </u-form-item>
     </u-form>
     <div class="route-wrap">
@@ -158,7 +175,7 @@
         </div>
       </div>
     </div>
-    <u-picker
+    <!-- <u-picker
       mode="time"
       v-model="reportDatePicker.visible"
       :default-time="reportDatePicker.selectedTime"
@@ -169,7 +186,7 @@
       }"
       :end-year="new Date().getFullYear()"
       @confirm="onDatePickerConfirm"
-    />
+    /> -->
     <div class="submit-wrap">
       <u-button type="primary" shape="circle" @click="onSubmit">提交</u-button>
     </div>
@@ -197,6 +214,7 @@ export default {
         selectedTime: dayjs().format("YYYY-MM-DD"),
       },
       report: {},
+      hadNotWriteDriverName: false,
     };
   },
 
@@ -214,12 +232,12 @@ export default {
         this.driver_name = this.report.info.driver_name;
         this.reportDatePicker.selectedTime = this.report.info.report_date;
       }
-      if (data.scheduleInfo) {
-        data.scheduleInfo = {
-          ...data.scheduleInfo,
-          _vehicleNames: data.scheduleInfo.vehicle_name.split(""),
-        };
-      }
+      // if (data.scheduleInfo) {
+      //   data.scheduleInfo = {
+      //     ...data.scheduleInfo,
+      //     _vehicleNames: data.scheduleInfo.vehicle_name.split(""),
+      //   };
+      // }
 
       if (data.list) {
         data.list = data.list.map((x) => {
@@ -238,13 +256,18 @@ export default {
       }
       this.routeInfo = data;
     },
-    onDatePickerConfirm({ year, month, day }) {
-      const _time = `${year}-${month}-${day}`;
-      this[`reportDatePicker`].selectedTime = dayjs(_time).format("YYYY-MM-DD");
-    },
+    // onDatePickerConfirm({ year, month, day }) {
+    //   const _time = `${year}-${month}-${day}`;
+    //   this[`reportDatePicker`].selectedTime = dayjs(_time).format("YYYY-MM-DD");
+    // },
     async onSubmit() {
       if (!this.driver_name) {
-        this.toast("请输入姓名");
+        this.hadNotWriteDriverName = true;
+        setTimeout(() => {
+          this.hadNotWriteDriverName = false;
+        }, 3000);
+        this.toast("请输入司机姓名");
+        uni.vibrateShort();
         return;
       }
       uni.showModal({
@@ -283,7 +306,7 @@ export default {
     },
   },
 
-  async onLoad({ group_id = 1, schedule_id = 53, report_id }) {
+  async onLoad({ group_id, schedule_id, report_id }) {
     this.group_id = group_id;
     this.schedule_id = schedule_id;
     if (report_id) {

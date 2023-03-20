@@ -28,6 +28,7 @@
   ::v-deep {
     .u-btn {
       width: 80%;
+      margin-bottom: 50rpx;
     }
   }
 }
@@ -41,10 +42,14 @@
     </div>
     <u-button
       plain
+      shape="circle"
       type="primary"
       @click="navTo(`/pages/form/details?report_id=${report_id}`)"
     >
       查看填报内容
+    </u-button>
+    <u-button type="primary" shape="circle" @click="toHome">
+      返回首页
     </u-button>
   </div>
 </template>
@@ -59,7 +64,15 @@ export default {
     };
   },
 
-  onLoad({ report_id = 2 }) {
+  methods: {
+    toHome() {
+      uni.switchTab({
+        url: `/pages/home/index`,
+      });
+    },
+  },
+
+  onLoad({ report_id }) {
     this.report_id = report_id;
   },
 };

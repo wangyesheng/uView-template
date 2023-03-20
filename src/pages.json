@@ -11,18 +11,6 @@
       }
     },
     {
-      "path": "pages/data/report",
-      "style": {
-        "navigationBarTitleText": "历史填报数据"
-      }
-    },
-    {
-      "path": "pages/form/details",
-      "style": {
-        "navigationBarTitleText": "查看填写内容"
-      }
-    },
-    {
       "path": "pages/form/index",
       "style": {
         "navigationBarTitleText": "填写"
@@ -35,15 +23,21 @@
       }
     },
     {
-      "path": "pages/form/schedule",
+      "path": "pages/data/report",
       "style": {
-        "navigationBarTitleText": "选择"
+        "navigationBarTitleText": "历史填报数据"
       }
     },
     {
-      "path": "pages/route/index",
+      "path": "pages/form/details",
       "style": {
-        "navigationBarTitleText": "路线查询"
+        "navigationBarTitleText": "查看填写内容"
+      }
+    },
+    {
+      "path": "pages/form/schedule",
+      "style": {
+        "navigationBarTitleText": "选择"
       }
     },
     {

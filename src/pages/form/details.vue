@@ -49,8 +49,8 @@
 
   .back {
     position: fixed;
-    right: 100rpx;
-    bottom: 100rpx;
+    right: 50rpx;
+    top: 50rpx;
     width: 100rpx;
     height: 100rpx;
     background: #fff;
@@ -79,10 +79,10 @@
         <span class="label">司机：</span>
         <span class="value">{{ report.info.driver_name }}</span>
       </div>
-      <div class="report-layer">
+      <!-- <div class="report-layer">
         <span class="label">车牌：</span>
         <span class="value">{{ report.info.vehicle_name }}</span>
-      </div>
+      </div> -->
       <div class="report-layer">
         <span class="label">日期：</span>
         <span class="value">{{ report.info.report_date }}</span>
@@ -131,7 +131,7 @@ export default {
     },
   },
 
-  async onLoad({ report_id = 6 }) {
+  async onLoad({ report_id }) {
     const data = await getReportByIdRes(report_id);
     this.report = data;
   },

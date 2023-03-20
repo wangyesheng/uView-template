@@ -173,7 +173,7 @@
           >
             <div class="left">
               <span>
-                {{ currentRegion.name ? currentRegion.name : "请选择班次" }}
+                {{ currentRegion.name ? currentRegion.name : "请选择地区" }}
               </span>
             </div>
             <u-icon
@@ -216,7 +216,7 @@
         hover-stay-time="150"
         @click="onNavTo(3)"
       >
-        查看历史数据
+        查看/修改已填报的数据
       </div>
     </div>
 

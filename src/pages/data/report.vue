@@ -87,10 +87,10 @@
         <span class="label">司机：</span>
         <span class="value">{{ item.driver_name }}</span>
       </div>
-      <div class="report-layer_inner">
+      <!-- <div class="report-layer_inner">
         <span class="label">车牌：</span>
         <span class="value">{{ item.vehicle_name }}</span>
-      </div>
+      </div> -->
       <div class="report-layer_footer">
         <div class="action">
           <u-button
