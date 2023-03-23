@@ -175,7 +175,7 @@
           @search="onSerchByKey"
         /> -->
         <div class="banner">
-          <u-swiper :list="banners" height="338" />
+          <u-swiper :list="banners" height="338" @click="onNavToMP" />
         </div>
       </div>
     </div>
@@ -339,6 +339,19 @@ export default {
   },
 
   methods: {
+    onNavToMP(index) {
+      const current = this.banners[index];
+      if (current.appid && current.url) {
+        uni.navigateToMiniProgram({
+          appId: current.appid,
+          path: current.url,
+          envVersion: "release",
+          fail: (error) => {
+            console.log("navigateToMiniProgram", error);
+          },
+        });
+      }
+    },
     onFormItemClick({ key }) {
       if (!this.appUser.id) {
         this.toast("请先授权登录");
