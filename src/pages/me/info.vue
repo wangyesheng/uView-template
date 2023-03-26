@@ -6,15 +6,12 @@
 }
 
 .cont {
-  padding: 60rpx 20rpx;
+  padding: 20rpx;
 }
 </style>
 
 <template>
   <div class="info-wrap">
-    <div class="header" :style="{ paddingTop: menuButtonInfo.top + 'px' }">
-      {{ type === "about" ? "关于平台" : "服务协议" }}
-    </div>
     <div class="cont" v-html="info"></div>
   </div>
 </template>
@@ -31,6 +28,9 @@ export default {
 
   async onLoad({ type }) {
     this.type = type;
+    uni.setNavigationBarTitle({
+      title: type === "about" ? "关于平台" : "服务协议",
+    });
     uni.getSystemInfo({
       success: () => {
         this.menuButtonInfo = uni.getMenuButtonBoundingClientRect();

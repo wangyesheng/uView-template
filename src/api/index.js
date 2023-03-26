@@ -16,6 +16,13 @@ export function checkLoginRes(payload) {
   });
 }
 
+export function getUserInfoRes() {
+  return request({
+    url: "/api/user/info",
+    method: "get",
+  });
+}
+
 export function getStaffRoutesRes() {
   return request({
     url: "/api/staff_route/list",

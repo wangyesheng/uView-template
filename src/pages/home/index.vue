@@ -279,7 +279,11 @@
 <script>
 import BindMobile from "@/components/BindMobile";
 import loginMixin from "@/mixins/login";
-import { getBannersRes, getStaffStationsByRouteIdRes } from "@/api";
+import {
+  getBannersRes,
+  getStaffStationsByRouteIdRes,
+  getUserInfoRes,
+} from "@/api";
 
 export default {
   name: "Home",
@@ -337,17 +341,31 @@ export default {
     },
 
     onNavTo() {
+      if (this.appUser.is_check != 1) {
+        this.toast("账号暂未通过审核，请联系管理员");
+        return;
+      }
       this.navTo("/pages/route/index?id=" + this.currentRoute.id);
     },
   },
 
-  onLoad() {
+  async onLoad() {
     uni.getSystemInfo({
       success: () => {
         this.menuButtonInfo = uni.getMenuButtonBoundingClientRect();
       },
     });
     this.getBanners();
+    const _appUser = this.getAppUser();
+    if (_appUser.id) {
+      const data = await getUserInfoRes();
+      const newUser = {
+        ..._appUser,
+        is_check: data.is_check,
+      };
+      uni.setStorageSync("APP_USER", newUser);
+      this.appUser = newUser;
+    }
   },
 };
 </script>

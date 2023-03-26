@@ -29,7 +29,6 @@
           border: none;
         }
       }
-
       .right {
         margin-left: 26rpx;
         display: flex;
@@ -40,19 +39,12 @@
           font-weight: bold;
           color: #373741;
         }
-
-        .role {
-          // width: 106rpx;
-          // height: 28rpx;
-          // background: ;
-          // background-image: url(https://zhonghai.tuomuit.com/assets/wechat/img/banner-bg.jpg);
-          // background-repeat: no-repeat;
-          // background-size: 100% 100%;
-          // font-size: 20rpx;
-          // font-weight: 400;
-          // color: #dbdde7;
-          // text-align: center;
-          // line-height: 28rpx;
+        .tags {
+          ::v-deep {
+            .u-tag {
+              margin-right: 20rpx;
+            }
+          }
         }
       }
     }
@@ -292,7 +284,26 @@
           />
           <div class="right">
             <span class="mobile">{{ appUser.mobile }}</span>
-            <u-tag :text="appUser.role" mode="dark" />
+            <div class="tags">
+              <u-tag :text="appUser.role" mode="dark" />
+              <u-tag
+                mode="light"
+                :text="
+                  appUser.is_check == 0
+                    ? '待审核'
+                    : appUser.is_check == 1
+                    ? '已审核'
+                    : '审核不通过'
+                "
+                :type="
+                  appUser.is_check == 0
+                    ? 'info'
+                    : appUser.is_check == 1
+                    ? 'success'
+                    : 'error'
+                "
+              />
+            </div>
           </div>
         </div>
 
@@ -390,6 +401,10 @@ export default {
           this.navTo("/pages/me/setting");
           break;
         case "opinion":
+          if (this.appUser.is_check != 1) {
+            this.toast("账号暂未通过审核，请联系管理员");
+            return;
+          }
           this.navTo("/pages/opinion/index");
           break;
         case "customer-service":
