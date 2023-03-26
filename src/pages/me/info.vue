@@ -4,33 +4,29 @@
   font-size: 30rpx;
   font-weight: 550;
 }
-
 .cont {
-  padding: 60rpx 20rpx;
+  padding: 20rpx;
 }
 </style>
 
 <template>
   <div class="info-wrap">
-    <div class="header" :style="{ paddingTop: menuButtonInfo.top + 'px' }">
-      {{ type === "about" ? "关于平台" : "服务协议" }}
-    </div>
     <div class="cont" v-html="info"></div>
   </div>
 </template>
 
 <script>
 import { getAgreementRes, getAboutRes } from "@/api";
-
 export default {
   name: "Info",
-
   data() {
     return { menuButtonInfo: {}, type: "", info: "" };
   },
-
   async onLoad({ type }) {
     this.type = type;
+    uni.setNavigationBarTitle({
+      title: type === "about" ? "关于平台" : "服务协议",
+    });
     uni.getSystemInfo({
       success: () => {
         this.menuButtonInfo = uni.getMenuButtonBoundingClientRect();

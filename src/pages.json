@@ -56,8 +56,7 @@
     {
       "path": "pages/me/info",
       "style": {
-        "navigationBarTitleText": "历史预约",
-        "navigationStyle": "custom"
+        "navigationBarTitleText": "关于平台"
       }
     },
     {

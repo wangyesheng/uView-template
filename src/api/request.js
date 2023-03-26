@@ -13,8 +13,10 @@ const request = ({ url, method, payload = {} }) => {
       } else {
         // 后台接口请求报错
       }
-      Vue.prototype.$u.toast(errerData.msg);
-      reject(errerData.msg);
+      if (errerData.code === 401) {
+        Vue.prototype.$u.toast("凭证过期，请重新授权登录");
+      }
+      reject(errerData);
     }
   });
 };

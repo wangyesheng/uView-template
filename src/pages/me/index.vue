@@ -499,19 +499,26 @@ export default {
       uni.setStorageSync("APP_USER", this.appUser);
     },
     async getLastestReserve() {
-      const data = await getLastestReserveRes();
-      this.lastestReserve = {
-        ...data,
-        _statusMap: {
-          label:
-            data.status == 0
-              ? "等待中..."
-              : data.status == 1
-              ? "已完成"
-              : "已取消",
-          color: data.status == 0 ? "#1FAE8E" : "#AAA",
-        },
-      };
+      try {
+        const data = await getLastestReserveRes();
+        this.lastestReserve = {
+          ...data,
+          _statusMap: {
+            label:
+              data.status == 0
+                ? "等待中..."
+                : data.status == 1
+                ? "已完成"
+                : "已取消",
+            color: data.status == 0 ? "#1FAE8E" : "#AAA",
+          },
+        };
+      } catch (error) {
+        if (error.code === 401) {
+          uni.setStorageSync("APP_USER", {});
+          this.appUser = {};
+        }
+      }
     },
     async cancelReserve(reserve_id) {
       uni.showModal({

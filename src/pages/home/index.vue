@@ -528,17 +528,24 @@ export default {
         number,
         scroll_top: `${hotelScrollTop || 0},${pointScrollTop || 0}`,
       };
-      await createReserveRes(reqData);
-      this.$refs.successToastRef.show({
-        title: "预约成功",
-        type: "success",
-        duration: "3000",
-      });
-      this.reverseSelect.data = [];
-      this.reverseSelect.number = 0;
-      this.reverseSelect.defaultValue = [];
-      this.findOrderItem("appointment", `选择预约人数`);
-      this.getRouteCanUseNumber();
+      try {
+        await createReserveRes(reqData);
+        this.$refs.successToastRef.show({
+          title: "预约成功",
+          type: "success",
+          duration: "3000",
+        });
+        this.reverseSelect.data = [];
+        this.reverseSelect.number = 0;
+        this.reverseSelect.defaultValue = [];
+        this.findOrderItem("appointment", `选择预约人数`);
+        this.getRouteCanUseNumber();
+      } catch (error) {
+        if (error.code === 401) {
+          uni.setStorageSync("APP_USER", {});
+          this.appUser = {};
+        }
+      }
     },
     async getBanners() {
       const data = await getBannersRes();
