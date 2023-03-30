@@ -515,7 +515,6 @@ export default {
         };
       } catch (error) {
         if (error.code === 401) {
-          uni.setStorageSync("APP_USER", {});
           this.appUser = {};
         }
       }

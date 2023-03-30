@@ -70,6 +70,12 @@
       "style": {
         "navigationBarTitleText": "选择免税店"
       }
+    },
+    {
+      "path": "pages/route/preview",
+      "style": {
+        "navigationBarTitleText": "路线图"
+      }
     }
   ],
   "globalStyle": {

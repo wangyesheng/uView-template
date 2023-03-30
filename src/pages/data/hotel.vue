@@ -1,9 +1,19 @@
 <style lang="scss" scoped>
 ._wrap {
   min-height: 100vh;
-  padding: 40rpx 20rpx;
+  padding: 20rpx 20rpx 40rpx;
   box-sizing: border-box;
   background: #f9f9fd;
+
+  ::v-deep {
+    .u-search {
+      margin-bottom: 20rpx !important;
+
+      .u-content {
+        height: 80rpx !important;
+      }
+    }
+  }
 
   .no-data {
     height: 60vh;
@@ -66,6 +76,13 @@
 
 <template>
   <div class="_wrap">
+    <u-search
+      placeholder="请输入乘车站名称"
+      placeholder-color="#babdc3"
+      :show-action="false"
+      v-model="searchHotelName"
+      @search="onSearch"
+    />
     <template v-if="dataSource.length > 0">
       <div
         v-for="(item, index) in dataSource"
@@ -104,13 +121,18 @@ export default {
     return {
       activeId: -1,
       dataSource: [],
+      searchHotelName: "",
     };
   },
 
   methods: {
-    async geHotels() {
+    onSearch() {
+      this.geHotels();
+    },
+    async geHotels(searchHotelName) {
       const data = await getHotelsRes({
         point_id: this.pointId,
+        hotel_name: searchHotelName ? searchHotelName : this.searchHotelName,
       });
       this.dataSource = data;
     },
@@ -122,17 +144,20 @@ export default {
       prvePage.$vm.getCurrentHotelData({
         ...scope,
         scrollTop: this.scrollTop,
+        searchHotelName: this.searchHotelName,
       });
       uni.navigateBack();
     },
   },
 
-  async onLoad({ pointId, id, scrollTop }) {
+  async onLoad({ pointId, id, searchHotelName, scrollTop }) {
+    searchHotelName = searchHotelName === "undefined" ? "" : searchHotelName;
     this.pointId = pointId;
-    await this.geHotels();
+    await this.geHotels(searchHotelName);
     if (id && scrollTop) {
       this.point_id = pointId;
       this.activeId = id;
+      this.searchHotelName = searchHotelName;
       uni.pageScrollTo({
         duration: 100,
         scrollTop: Number(scrollTop),

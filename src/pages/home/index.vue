@@ -341,7 +341,7 @@ export default {
   methods: {
     onNavToMP(index) {
       const current = this.banners[index];
-      if (current.appid && current.url) {
+      if (current.format == 1) {
         uni.navigateToMiniProgram({
           appId: current.appid,
           path: current.url,
@@ -350,6 +350,8 @@ export default {
             console.log("navigateToMiniProgram", error);
           },
         });
+      } else if (current.format == 2) {
+        this.navTo(`/pages/route/preview?url=${current.url}`);
       }
     },
     onFormItemClick({ key }) {
@@ -357,8 +359,11 @@ export default {
         this.toast("请先授权登录");
         return;
       }
-      const { id: hotel_id, scrollTop: hotelScrollTop } =
-        this.hotelPopup.currentHotel;
+      const {
+        id: hotel_id,
+        scrollTop: hotelScrollTop,
+        searchHotelName,
+      } = this.hotelPopup.currentHotel;
       const { id: point_id, scrollTop: storeScrollTop } =
         this.storePopup.currentStore;
       if (key === "store") {
@@ -376,7 +381,7 @@ export default {
         }
         if (hotel_id) {
           this.navTo(
-            `/pages/data/hotel?pointId=${point_id}&id=${hotel_id}&scrollTop=${hotelScrollTop}`
+            `/pages/data/hotel?pointId=${point_id}&id=${hotel_id}&scrollTop=${hotelScrollTop}&searchHotelName=${searchHotelName}`
           );
         } else {
           this.navTo(`/pages/data/hotel?pointId=${point_id}`);
@@ -431,9 +436,11 @@ export default {
       if (data && data.length > 0) {
         const currentDay = dayjs().format("YYYY-MM-DD");
         const nextDay = dayjs().add(1, "day").format("YYYY-MM-DD");
+        const next2Day = dayjs().add(2, "day").format("YYYY-MM-DD");
 
-        const currentDates = [];
-        const nextDates = [];
+        const currentDates = [],
+          nextDates = [],
+          next2Dates = [];
 
         data.forEach((x) => {
           const currentDate = `${currentDay} ${x}`;
@@ -443,14 +450,18 @@ export default {
             currentDates.push(currentDate);
           }
           nextDates.push(`${nextDay} ${x}`);
+          next2Dates.push(`${next2Day} ${x}`);
         });
 
-        this.timeSelect.data = currentDates.concat(nextDates).map((x, i) => {
-          return {
-            label: x,
-            value: i,
-          };
-        });
+        this.timeSelect.data = currentDates
+          .concat(nextDates)
+          .concat(next2Dates)
+          .map((x, i) => {
+            return {
+              label: x,
+              value: i,
+            };
+          });
         this.timeSelect.visible = true;
       } else {
         this.toast("暂无可预约时间");
@@ -542,7 +553,6 @@ export default {
         this.getRouteCanUseNumber();
       } catch (error) {
         if (error.code === 401) {
-          uni.setStorageSync("APP_USER", {});
           this.appUser = {};
         }
       }

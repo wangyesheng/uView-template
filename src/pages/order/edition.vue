@@ -274,8 +274,11 @@ export default {
       }
     },
     onFormItemClick({ key }) {
-      const { id: hotel_id, scrollTop: hotelScrollTop } =
-        this.hotelPopup.currentHotel;
+      const {
+        id: hotel_id,
+        scrollTop: hotelScrollTop,
+        searchHotelName,
+      } = this.hotelPopup.currentHotel;
       const { id: point_id, scrollTop: storeScrollTop } =
         this.storePopup.currentStore;
       if (key === "store") {
@@ -289,7 +292,7 @@ export default {
       } else if (key === "hotel") {
         if (hotel_id) {
           this.navTo(
-            `/pages/data/hotel?pointId=${point_id}&id=${hotel_id}&scrollTop=${hotelScrollTop}`
+            `/pages/data/hotel?pointId=${point_id}&id=${hotel_id}&scrollTop=${hotelScrollTop}&searchHotelName=${searchHotelName}`
           );
         } else {
           this.navTo(`/pages/data/hotel?pointId=${point_id}`);
