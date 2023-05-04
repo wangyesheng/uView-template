@@ -11,7 +11,12 @@
 
 <template>
   <div class="route-preview-wrap">
-    <img :style="{ height: imgHeight + 'px' }" :src="url" alt="" />
+    <img
+      :style="{ height: imgHeight + 'px' }"
+      :src="url"
+      alt=""
+      @click="onPreview"
+    />
   </div>
 </template>
 
@@ -25,6 +30,15 @@ export default {
     imgHeight() {
       const { windowWidth } = uni.getSystemInfoSync();
       return (windowWidth * 9896) / 3146;
+    },
+  },
+
+  methods: {
+    onPreview() {
+      uni.previewImage({
+        current: 0,
+        urls: [this.url],
+      });
     },
   },
 };
