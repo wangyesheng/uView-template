@@ -145,6 +145,7 @@
         <u-input
           disabled
           v-model="arrivedTimePicker.selectedTime"
+          placeholder="请选择实际到达时间"
           @click="onShowDatePicker"
         />
       </u-form-item>
@@ -235,13 +236,10 @@ export default {
       if (this.report.info) {
         this.driver_name = this.report.info.driver_name;
         this.reportDatePicker.selectedTime = this.report.info.report_date;
+        this.arrivedTimePicker.selectedTime = dayjs(
+          this.report.info.arrived_time
+        ).format("YYYY-MM-DD HH:mm");
       }
-      // if (data.scheduleInfo) {
-      //   data.scheduleInfo = {
-      //     ...data.scheduleInfo,
-      //     _vehicleNames: data.scheduleInfo.vehicle_name.split(""),
-      //   };
-      // }
 
       if (data.list) {
         data.list = data.list.map((x) => {
@@ -283,7 +281,7 @@ export default {
         setTimeout(() => {
           this.hadNotWriteArrivedTime = false;
         }, 3000);
-        this.toast("请输入实际到达时间");
+        this.toast("请选择实际到达时间");
         uni.vibrateShort();
         return;
       }

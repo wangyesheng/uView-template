@@ -87,6 +87,10 @@
         <span class="label">司机：</span>
         <span class="value">{{ item.driver_name }}</span>
       </div>
+      <div class="report-layer_inner">
+        <span class="label">实际到达时间：</span>
+        <span class="value">{{ item.arrived_time }}</span>
+      </div>
       <!-- <div class="report-layer_inner">
         <span class="label">车牌：</span>
         <span class="value">{{ item.vehicle_name }}</span>
