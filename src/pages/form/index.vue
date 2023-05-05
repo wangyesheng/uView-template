@@ -137,19 +137,17 @@
       >
         <u-input placeholder="请输入司机姓名" v-model="driver_name" />
       </u-form-item>
-      <!-- <u-form-item label="车牌：">
-        <div class="car-number-wrap">
-          <div class="car-number-inner">
-            <div
-              class="car-number-inner_layer"
-              v-for="(item, i) in routeInfo.scheduleInfo._vehicleNames"
-              :key="i"
-            >
-              {{ item }}
-            </div>
-          </div>
-        </div>
-      </u-form-item> -->
+      <u-form-item
+        label="实际达到时间："
+        :class="hadNotWriteArrivedTime ? 'active' : ''"
+        :label-style="{ fontSize: '32rpx', fontWeight: 550 }"
+      >
+        <u-input
+          disabled
+          v-model="arrivedTimePicker.selectedTime"
+          @click="onShowDatePicker"
+        />
+      </u-form-item>
       <u-form-item
         label="日期："
         :label-style="{ fontSize: '32rpx', fontWeight: 550 }"
@@ -175,18 +173,19 @@
         </div>
       </div>
     </div>
-    <!-- <u-picker
+    <u-picker
       mode="time"
-      v-model="reportDatePicker.visible"
-      :default-time="reportDatePicker.selectedTime"
+      v-model="arrivedTimePicker.visible"
+      :default-time="arrivedTimePicker.selectedTime"
       :params="{
         year: true,
         month: true,
         day: true,
+        hour: true,
+        minute: true,
       }"
-      :end-year="new Date().getFullYear()"
       @confirm="onDatePickerConfirm"
-    /> -->
+    />
     <div class="submit-wrap">
       <u-button type="primary" shape="circle" @click="onSubmit">提交</u-button>
     </div>
@@ -213,8 +212,13 @@ export default {
         visible: false,
         selectedTime: dayjs().format("YYYY-MM-DD"),
       },
+      arrivedTimePicker: {
+        visible: false,
+        selectedTime: "",
+      },
       report: {},
       hadNotWriteDriverName: false,
+      hadNotWriteArrivedTime: false,
     };
   },
 
@@ -256,10 +260,13 @@ export default {
       }
       this.routeInfo = data;
     },
-    // onDatePickerConfirm({ year, month, day }) {
-    //   const _time = `${year}-${month}-${day}`;
-    //   this[`reportDatePicker`].selectedTime = dayjs(_time).format("YYYY-MM-DD");
-    // },
+    onShowDatePicker() {
+      this.arrivedTimePicker.visible = true;
+    },
+    onDatePickerConfirm({ year, month, day, hour, minute }) {
+      const _time = `${year}-${month}-${day} ${hour}:${minute}`;
+      this[`arrivedTimePicker`].selectedTime = _time;
+    },
     async onSubmit() {
       if (!this.driver_name) {
         this.hadNotWriteDriverName = true;
@@ -267,6 +274,16 @@ export default {
           this.hadNotWriteDriverName = false;
         }, 3000);
         this.toast("请输入司机姓名");
+        uni.vibrateShort();
+        return;
+      }
+
+      if (!this.arrivedTimePicker.selectedTime) {
+        this.hadNotWriteArrivedTime = true;
+        setTimeout(() => {
+          this.hadNotWriteArrivedTime = false;
+        }, 3000);
+        this.toast("请输入实际到达时间");
         uni.vibrateShort();
         return;
       }
@@ -282,6 +299,7 @@ export default {
             const reqData = {
               driver_name: this.driver_name,
               report_date: this.reportDatePicker.selectedTime,
+              arrived_time: this.arrivedTimePicker.selectedTime,
               data_info: JSON.stringify(data_info),
             };
             if (this.report_id) {
