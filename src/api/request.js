@@ -17,7 +17,7 @@ const request = ({ url, method, payload = {} }) => {
         Vue.prototype.$u.toast("凭证过期，请重新授权");
         uni.setStorageSync("APP_USER", {});
       } else {
-        Vue.prototype.$u.toast(errerData.msg);
+        errerData.msg && Vue.prototype.$u.toast(errerData.msg);
       }
       reject(errerData);
     }

@@ -151,7 +151,22 @@ export function createOpinionRes(payload) {
 
 export function getOpinionsRes() {
   return request({
-    url: "/api/help/list",
+    url: "/api/help/help_list",
     method: "get",
+  });
+}
+
+export function getIsReadRes() {
+  return request({
+    url: "/api/help/get_is_read",
+    method: "get",
+  });
+}
+
+export function setIsReadRes(payload) {
+  return request({
+    url: "/api/help/set_is_read",
+    method: "get",
+    payload,
   });
 }

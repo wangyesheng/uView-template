@@ -11,6 +11,12 @@
       }
     },
     {
+      "path": "pages/opinion/index",
+      "style": {
+        "navigationBarTitleText": "意见反馈"
+      }
+    },
+    {
       "path": "pages/me/index",
       "style": {
         "navigationBarTitleText": "我的",
@@ -27,12 +33,6 @@
       "path": "pages/me/setting",
       "style": {
         "navigationBarTitleText": "设置"
-      }
-    },
-    {
-      "path": "pages/opinion/index",
-      "style": {
-        "navigationBarTitleText": "意见反馈"
       }
     },
     {

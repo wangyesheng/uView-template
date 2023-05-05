@@ -35,7 +35,7 @@
 
     &-content {
       box-sizing: border-box;
-      padding: 28rpx 34rpx 30rpx 28rpx;
+      padding: 20rpx 38rpx;
 
       .cont {
         font-size: 30rpx;
@@ -55,12 +55,71 @@
         }
       }
     }
+
+    &-expand {
+      padding: 0 30rpx 20rpx;
+      box-sizing: border-box;
+
+      &_header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #158edc;
+        font-size: 26rpx;
+
+        span {
+          margin-left: 10rpx;
+        }
+      }
+
+      &_content {
+        display: flex;
+        flex-direction: column;
+        color: #30303b;
+        & > div {
+          font-size: 28rpx;
+          padding: 20rpx 0;
+
+          &:not(:last-child) {
+            border-bottom: 2rpx dashed #dfdfdf;
+          }
+
+          div:nth-child(1) {
+            margin-bottom: 20rpx;
+          }
+
+          div:nth-child(2) {
+            color: #666;
+            font-size: 26rpx;
+            display: flex;
+            justify-content: space-between;
+          }
+        }
+      }
+    }
+  }
+
+  .isread {
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 20rpx;
+
+    ::v-deep {
+      .u-btn {
+        float: right;
+      }
+    }
   }
 }
 </style>
 
 <template>
   <div class="my-opinion-wrap">
+    <div class="isread">
+      <u-button size="mini" type="primary" @click="onSetRead">
+        一键已读
+      </u-button>
+    </div>
     <div class="opinion-layer" v-for="item in opinions" :key="item.id">
       <div class="opinion-layer-header">
         <span class="mobile">{{ item.mobile }}</span>
@@ -80,12 +139,27 @@
           />
         </div>
       </div>
+      <div class="opinion-layer-expand" v-if="item.reply_list.length > 0">
+        <div class="opinion-layer-expand_header" @click="onShowReply(item)">
+          <u-icon :name="item._expand ? 'arrow-up' : 'arrow-down'" />
+          <span>{{ item._expand ? "收起回复" : "展开回复" }}</span>
+        </div>
+        <div class="opinion-layer-expand_content" v-if="item._expand">
+          <div v-for="(reply, i) in item.reply_list" :key="i">
+            <div>{{ reply.content }}</div>
+            <div>
+              <span>{{ reply.contact }}</span>
+              <span>{{ reply.createtime }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getOpinionsRes } from "@/api";
+import { getOpinionsRes, setIsReadRes } from "@/api";
 import dayjs from "dayjs";
 
 export default {
@@ -104,6 +178,7 @@ export default {
         ...x,
         _time: dayjs(x.createtime * 1000).format("YYYY-MM-DD HH:mm:ss"),
         _images: x.images ? x.images.split(",") : [],
+        _expand: false,
       }));
     },
     onPreview(url) {
@@ -111,6 +186,19 @@ export default {
         current: 0,
         urls: [url],
       });
+    },
+    async onShowReply(item) {
+      item._expand = !item._expand;
+      if (item.is_read == 1) {
+        await setIsReadRes({
+          help_id: item.id,
+        });
+      }
+    },
+
+    async onSetRead() {
+      await setIsReadRes();
+      this.toast("操作成功");
     },
   },
 

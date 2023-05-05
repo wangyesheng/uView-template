@@ -217,7 +217,7 @@ export default {
         images: [],
       };
       this.$refs.uploadRef && this.$refs.uploadRef.clear();
-      this.toast("反馈成功");
+      this.navTo("/pages/opinion/me");
     },
   },
 };

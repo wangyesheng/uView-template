@@ -256,6 +256,7 @@
             font-size: 28rpx;
             font-weight: bold;
             color: #373741;
+            margin-right: 10rpx;
           }
         }
 
@@ -397,6 +398,13 @@
                   alt=""
                 />
                 <span>{{ func.label }}</span>
+                <u-tag
+                  v-if="func.icon == 'opinion' && isRead == 1"
+                  text="已回复"
+                  type="error"
+                  size="mini"
+                  shape="circle"
+                />
               </div>
               <u-icon name="arrow-right" color="#D8DBDC" />
             </div>
@@ -420,6 +428,7 @@ import {
   cancelReserveRes,
   getCustomerPhoneRes,
   updateUserProfileRes,
+  getIsReadRes,
 } from "@/api";
 
 export default {
@@ -448,6 +457,7 @@ export default {
         },
       ],
       lastestReserve: {},
+      isRead: 0,
     };
   },
 
@@ -531,10 +541,17 @@ export default {
         },
       });
     },
+    async getIsRead() {
+      const data = await getIsReadRes();
+      this.isRead = data.is_read;
+    },
   },
 
   onShow() {
-    if (this.appUser.id) this.getLastestReserve();
+    if (this.appUser.id) {
+      this.getLastestReserve();
+      this.getIsRead();
+    }
   },
 };
 </script>
