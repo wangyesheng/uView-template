@@ -53,6 +53,7 @@
       color: #42ba87;
       display: flex;
       align-items: center;
+      margin-bottom: 40rpx;
 
       img {
         width: 30rpx;
@@ -66,7 +67,7 @@
       display: flex;
       flex-direction: column;
       border-left: 2rpx solid #ccc;
-      margin: 50rpx auto 0;
+      margin: 40rpx auto 0;
       position: relative;
 
       &::before {
@@ -82,7 +83,7 @@
 
       &_layer {
         width: 100%;
-        height: 300rpx;
+        height: 320rpx;
         padding-left: 50rpx;
         box-sizing: border-box;
         position: relative;
@@ -141,7 +142,7 @@
         .extra-info {
           position: absolute;
           left: 50rpx;
-          top: 90rpx;
+          top: 70rpx;
           font-size: 28rpx;
           font-weight: 400;
           color: #15d6dc;
@@ -214,8 +215,13 @@
             <img src="../../static/images/route/icon-car.png" alt="" />
             <div class="arrive-info">
               <div class="arrive-car">
-                <span>预计{{ station.arrive_time }}到达下一站</span>
+                <span>
+                  {{
+                    station.arrive_time
+                  }}（预计到达时间仅供参考，请提前到达车站等候，以发车时刻表为准）
+                </span>
                 <span>车牌号：{{ station.vehicle_code }}</span>
+                <span> </span>
               </div>
             </div>
             <div class="next-station">下一站</div>
@@ -254,6 +260,10 @@ export default {
       const data = await getStaffRouteInfoByRouteIdRes(this.id);
       this.rawRouteInfos = data;
       this.routeInfo = data[0];
+      // this.routeInfo.items[3].arrive_time = "预计20min到达下一站";
+      // this.routeInfo.items[0].is_pass = 1;
+      // this.routeInfo.items[1].is_pass = 1;
+      // this.routeInfo.items[2].is_pass = 1;
       this.select.selectValue = this.routeInfo.name;
       this.select.data = data.map((x, i) => ({
         label: x.name,
