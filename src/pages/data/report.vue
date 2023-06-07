@@ -122,6 +122,8 @@
 
 <script>
 import { getReportsRes } from "@/api";
+import dayjs from "dayjs";
+
 export default {
   name: "ReportList",
 
@@ -134,7 +136,10 @@ export default {
   methods: {
     async getReports() {
       const data = await getReportsRes();
-      this.reports = data;
+      this.reports = data.map((x) => ({
+        ...x,
+        arrived_time: dayjs(x.arrived_time).format("HH:mm"),
+      }));
     },
   },
 

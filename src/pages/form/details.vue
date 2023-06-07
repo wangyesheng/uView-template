@@ -113,6 +113,7 @@
 
 <script>
 import { getReportByIdRes } from "@/api";
+import dayjs from "dayjs";
 
 export default {
   name: "ReportInfo",
@@ -133,6 +134,7 @@ export default {
 
   async onLoad({ report_id }) {
     const data = await getReportByIdRes(report_id);
+    data.info.arrived_time = dayjs(data.info.arrived_time).format("HH:mm");
     this.report = data;
   },
 };

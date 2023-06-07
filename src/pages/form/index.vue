@@ -179,9 +179,6 @@
       v-model="arrivedTimePicker.visible"
       :default-time="arrivedTimePicker.selectedTime"
       :params="{
-        year: true,
-        month: true,
-        day: true,
         hour: true,
         minute: true,
       }"
@@ -238,7 +235,7 @@ export default {
         this.reportDatePicker.selectedTime = this.report.info.report_date;
         this.arrivedTimePicker.selectedTime = dayjs(
           this.report.info.arrived_time
-        ).format("YYYY-MM-DD HH:mm");
+        ).format("HH:mm");
       }
 
       if (data.list) {
@@ -261,8 +258,8 @@ export default {
     onShowDatePicker() {
       this.arrivedTimePicker.visible = true;
     },
-    onDatePickerConfirm({ year, month, day, hour, minute }) {
-      const _time = `${year}-${month}-${day} ${hour}:${minute}`;
+    onDatePickerConfirm({ hour, minute }) {
+      const _time = `${hour}:${minute}`;
       this[`arrivedTimePicker`].selectedTime = _time;
     },
     async onSubmit() {
