@@ -133,6 +133,14 @@
       }
     }
 
+    .__tips {
+      color: #158edc;
+      margin-top: 20rpx;
+      text-align: center;
+      font-size: 24rpx;
+      font-weight: 550;
+    }
+
     ::v-deep {
       .u-btn--primary {
         margin-top: 40rpx;
@@ -227,6 +235,7 @@
         <u-button type="primary" shape="circle" v-else @click="onOrderSubmit">
           立即预约
         </u-button>
+        <div class="__tips">*返程无需预约</div>
       </div>
     </div>
     <!-- <Popup
