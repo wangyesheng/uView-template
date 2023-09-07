@@ -23,92 +23,189 @@ export function getUserInfoRes() {
   });
 }
 
-export function getRegionsRes() {
+export function getCheckTypesRes() {
   return request({
-    url: "/api/region/list",
+    url: "/api/category/list?type=check_type",
     method: "get",
   });
 }
 
-export function getRoutesRes(payload) {
+export function getPetTypesRes() {
   return request({
-    url: "/api/driver_route/getRouteList",
+    url: "/api/pet_info/pet_list",
     method: "get",
-    payload,
   });
 }
 
-export function getSchedulesRes(payload) {
+export function getInsuresRes() {
   return request({
-    url: "/api/driver_route/scheduleList",
+    url: "/api/insure_info/insure_list",
     method: "get",
-    payload,
   });
 }
 
-export function getRouteInfoRes(payload) {
+export function addOrUpdateOrderRes(payload) {
   return request({
-    url: "/api/driver_route/routeInfo",
-    method: "get",
-    payload,
-  });
-}
-
-export function createReportDataRes(payload) {
-  return request({
-    url: "/api/driver_route/createInfo",
+    url: "/api/user_quotation_price_d/create",
     method: "post",
     payload,
   });
 }
 
-export function updateReportDataRes(payload) {
+export function getOrdersRes(payload) {
   return request({
-    url: "/api/driver_route/updateInfo",
+    url: "/api/user_quotation_price_d/get_user_quotation",
+    method: "get",
+    payload,
+  });
+}
+
+export function getOrderInfoRes(order_number) {
+  return request({
+    url: "/api/user_quotation_price_d/view",
+    method: "get",
+    payload: {
+      order_number,
+    },
+  });
+}
+
+export function getMerchantsRes(order_number) {
+  return request({
+    url: "/api/transport_quotation_price_d/list",
+    method: "get",
+    payload: {
+      order_number,
+    },
+  });
+}
+
+export function getMerchantPriceRes(payload) {
+  return request({
+    url: "/api/user_order_d/get_deposit_price",
+    method: "get",
+    payload,
+  });
+}
+
+export function getPayParamsRes(payload) {
+  return request({
+    url: "/api/user_order_d/deposit_pay",
     method: "post",
     payload,
   });
 }
 
-export function getReportsRes() {
+export function getFinalPayParamsRes(payload) {
   return request({
-    url: "/api/driver_route/reportList",
+    url: "/api/user_order_d/order_pay",
+    method: "post",
+    payload,
+  });
+}
+
+export function getRefundRuleRes() {
+  return request({
+    url: "/api/index/get_refund_rule",
     method: "get",
   });
 }
 
-export function getReportByIdRes(report_id) {
+export function getReleaseAgreementRes() {
   return request({
-    url: "/api/driver_route/reportInfo",
-    method: "get",
-    payload: { report_id },
-  });
-}
-
-export function getStaffRoutesRes() {
-  return request({
-    url: "/api/staff_route/list",
+    url: "/api/index/get_release_agreement",
     method: "get",
   });
 }
-
-export function getStaffStationsByRouteIdRes(route_id) {
+export function refundRes(payload) {
   return request({
-    url: "/api/staff_route/station_list",
+    url: "/api/user_order_d/cancel_order",
+    method: "post",
+    payload,
+  });
+}
+// 取消托运
+export function cancelOrderRes(order_number) {
+  return request({
+    url: "/api/user_quotation_price_d/cancel",
     method: "get",
     payload: {
-      route_id,
+      order_number,
     },
   });
 }
 
-export function getStaffRouteInfoByRouteIdRes(route_id) {
+export function confirmOrderRes(order_number) {
   return request({
-    url: "/api/staff_route/info",
+    url: "/api/user_quotation_price_d/confirm_order",
     method: "get",
     payload: {
-      route_id,
+      order_number,
     },
+  });
+}
+
+export function getCagesRes() {
+  return request({
+    url: "/api/cage_info/cage_list",
+    method: "get",
+  });
+}
+
+export function merchantApplyRes(payload) {
+  return request({
+    url: "/api/transport_service_info/apply",
+    method: "post",
+    payload,
+  });
+}
+
+export function getBannersRes() {
+  return request({
+    url: "/api/banner/list",
+    method: "get",
+  });
+}
+export function getTravelInfoRes() {
+  return request({
+    url: "/api/user_quotation_price_d/get_travel_track",
+    method: "get",
+  });
+}
+export function getInsureClauseRes() {
+  return request({
+    url: "/api/index/get_insure_clause",
+    method: "get",
+  });
+}
+export function getServiceMobileRes() {
+  return request({
+    url: "/api/index/get_service_mobile",
+    method: "get",
+  });
+}
+export function getCommonQuestionRes() {
+  return request({
+    url: "/api/index/get_common_question",
+    method: "get",
+  });
+}
+export function getAboutUSRes() {
+  return request({
+    url: "/api/index/get_about_us",
+    method: "get",
+  });
+}
+export function getServiceAgreementRes() {
+  return request({
+    url: "/api/index/get_service_agreement",
+    method: "get",
+  });
+}
+export function getMerchantReviewStatusRes() {
+  return request({
+    url: "/api/transport_service_info/get_apply_status",
+    method: "get",
   });
 }
 
@@ -119,127 +216,19 @@ export function updateUserProfileRes(payload) {
     payload,
   });
 }
-
-export function getCustomerPhoneRes() {
+export function applyAfterSalesRes(payload) {
   return request({
-    url: "/api/help/servicePhone",
-    method: "get",
-  });
-}
-
-export function getAgreementRes() {
-  return request({
-    url: "/api/help/agreement",
-    method: "get",
-  });
-}
-
-export function getAboutRes() {
-  return request({
-    url: "/api/help/about",
-    method: "get",
-  });
-}
-
-export function getBannersRes() {
-  return request({
-    url: "/api/banner/list",
-    method: "get",
-  });
-}
-
-export function getHotelsRes(payload) {
-  return request({
-    url: "/api/hotel/list",
-    method: "get",
-    payload,
-  });
-}
-export function getPointsRes() {
-  return request({
-    url: "/api/point/list",
-    method: "get",
-  });
-}
-
-export function getRouteNumberRes(payload) {
-  return request({
-    url: "/api/route/getNumber",
+    url: "/api/user_quotation_price_d/after_sale",
     method: "post",
     payload,
   });
 }
-
-export function getRouteInfoListRes(payload) {
+export function getApplyAfterSalesRes(order_number) {
   return request({
-    url: "/api/route_station/getRouteInfoList",
-    method: "get",
-    payload,
-  });
-}
-
-export function createReserveRes(payload) {
-  return request({
-    url: "/api/reserve/create",
-    method: "post",
-    payload,
-  });
-}
-
-export function getReservesRes(payload) {
-  return request({
-    url: "/api/reserve/list",
-    method: "get",
-    payload,
-  });
-}
-
-export function cancelReserveRes(reserve_id) {
-  return request({
-    url: "/api/reserve/cancel",
-    method: "post",
-    payload: {
-      reserve_id,
-    },
-  });
-}
-
-export const getReserveByIdRes = (reserve_id) => {
-  return request({
-    url: "/api/reserve/info",
+    url: "/api/user_quotation_price_d/get_after_sale",
     method: "get",
     payload: {
-      reserve_id,
+      order_number,
     },
-  });
-};
-
-export const updateReserveRes = (payload) => {
-  return request({
-    url: "/api/reserve/update",
-    method: "post",
-    payload,
-  });
-};
-
-export function getLastestReserveRes() {
-  return request({
-    url: "/api/reserve/new",
-    method: "get",
-  });
-}
-
-export function createOpinionRes(payload) {
-  return request({
-    url: "/api/help/create",
-    method: "post",
-    payload,
-  });
-}
-
-export function getOpinionsRes() {
-  return request({
-    url: "/api/help/list",
-    method: "get",
   });
 }

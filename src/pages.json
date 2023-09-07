@@ -11,33 +11,21 @@
       }
     },
     {
-      "path": "pages/form/index",
+      "path": "pages/order/index",
       "style": {
-        "navigationBarTitleText": "填写"
+        "navigationBarTitleText": "我的订单"
       }
     },
     {
-      "path": "pages/form/success",
+      "path": "pages/order/after-sales",
       "style": {
-        "navigationBarTitleText": "结果页"
+        "navigationBarTitleText": "申请售后"
       }
     },
     {
-      "path": "pages/data/report",
+      "path": "pages/order/apply-result",
       "style": {
-        "navigationBarTitleText": "历史填报数据"
-      }
-    },
-    {
-      "path": "pages/form/details",
-      "style": {
-        "navigationBarTitleText": "查看填写内容"
-      }
-    },
-    {
-      "path": "pages/form/schedule",
-      "style": {
-        "navigationBarTitleText": "选择"
+        "navigationBarTitleText": "售后结果"
       }
     },
     {
@@ -48,51 +36,95 @@
       }
     },
     {
+      "path": "pages/me/review-result",
+      "style": {
+        "navigationBarTitleText": "审核结果"
+      }
+    },
+    {
+      "path": "pages/me/merchant",
+      "style": {
+        "navigationBarTitleText": "成为商家"
+      }
+    },
+    {
+      "path": "pages/me/common",
+      "style": {
+        "navigationBarTitleText": "常见问题"
+      }
+    },
+    {
+      "path": "pages/route/index",
+      "style": {
+        "navigationBarTitleText": "行程",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/route/preview",
+      "style": {
+        "navigationBarTitleText": "行程",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/order/detail",
+      "style": {
+        "navigationBarTitleText": "订单详情"
+      }
+    },
+    {
+      "path": "pages/order/edition",
+      "style": {
+        "navigationBarTitleText": "修改订单"
+      }
+    },
+    {
+      "path": "pages/order/merchant",
+      "style": {
+        "navigationBarTitleText": "商家报价"
+      }
+    },
+    {
+      "path": "pages/order/result",
+      "style": {
+        "navigationBarTitleText": "订单结果"
+      }
+    },
+    {
+      "path": "pages/order/pay-deposit",
+      "style": {
+        "navigationBarTitleText": "支付定金"
+      }
+    },
+    {
       "path": "pages/me/setting",
       "style": {
         "navigationBarTitleText": "设置"
       }
     },
     {
-      "path": "pages/opinion/index",
+      "path": "pages/order/pay-final",
       "style": {
-        "navigationBarTitleText": "意见反馈"
+        "navigationBarTitleText": "托管尾款"
       }
     },
     {
-      "path": "pages/opinion/me",
+      "path": "pages/order/ensure",
       "style": {
-        "navigationBarTitleText": "我的反馈"
-      }
-    },
-    {
-      "path": "pages/me/info",
-      "style": {
-        "navigationBarTitleText": "关于平台"
-      }
-    },
-    {
-      "path": "pages/data/region",
-      "style": {
-        "navigationBarTitleText": "地区列表"
-      }
-    },
-    {
-      "path": "pages/data/route",
-      "style": {
-        "navigationBarTitleText": "路线列表"
+        "navigationBarTitleText": "确认行程"
       }
     }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uView UI",
+    "navigationBarTitleText": "宠物托运宠小皮",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
   "tabBar": {
-    "color": "#909399",
-    "selectedColor": "#303133",
+    "color": "#868686",
+    "selectedColor": "#3BB7AF",
     "backgroundColor": "#FFFFFF",
     "borderStyle": "black",
     "list": [
@@ -101,6 +133,12 @@
         "selectedIconPath": "static/images/tabbar/home-selected.png",
         "text": "首页",
         "pagePath": "pages/home/index"
+      },
+      {
+        "iconPath": "static/images/tabbar/route.png",
+        "selectedIconPath": "static/images/tabbar/route-selected.png",
+        "text": "行程",
+        "pagePath": "pages/route/index"
       },
       {
         "iconPath": "static/images/tabbar/me.png",

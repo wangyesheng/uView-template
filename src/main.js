@@ -3,6 +3,12 @@ import uView from "uview-ui";
 import App from "./App";
 import Layout from "./layout";
 import httpInterceptor from "@/utils/http.interceptor.js";
+import QQMapWX from "@/utils/qqmap-wx-jssdk.min.js";
+import "@/static/styles/index.scss";
+
+Vue.prototype.$qqmapsdk = new QQMapWX({
+  key: "WNQBZ-GCJCC-P4W2B-A5V4D-ITNWZ-KOFSY",
+});
 
 Vue.component("app-layout", Layout);
 

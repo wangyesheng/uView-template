@@ -34,22 +34,10 @@
   }
 
   ::v-deep {
-    .u-btn--default {
+    .u-btn {
       margin: 150rpx auto 0;
       width: 90%;
       height: 100rpx;
-      background: #d4d4d4;
-      font-size: 28rpx;
-      font-weight: bold;
-      color: #636363;
-      &::after {
-        border-color: #f2f2f2 !important;
-      }
-    }
-
-    .u-default-hover {
-      background: #e0e0e0 !important;
-      color: #636363 !important;
     }
   }
 }
@@ -59,29 +47,11 @@
   <div class="setting-wrap">
     <div class="setting-inner">
       <div class="cell-group">
-        <!-- <div
-          class="cell"
-          hover-class="cell-hover"
-          hover-stay-time="150"
-          @click="onCellClick"
-        >
-          <span>更换手机号</span>
-          <u-icon name="arrow-right" color="#D8DBDC" />
-        </div>
         <div
           class="cell"
           hover-class="cell-hover"
           hover-stay-time="150"
-          @click="onCellClick"
-        >
-          <span>注销账户</span>
-          <u-icon name="arrow-right" color="#D8DBDC" />
-        </div> -->
-        <div
-          class="cell"
-          hover-class="cell-hover"
-          hover-stay-time="150"
-          @click="onCellClick('about')"
+          @click="onCellClick('1')"
         >
           <span>关于平台</span>
           <u-icon name="arrow-right" color="#D8DBDC" />
@@ -90,7 +60,7 @@
           class="cell"
           hover-class="cell-hover"
           hover-stay-time="150"
-          @click="onCellClick('agreement')"
+          @click="onCellClick('2')"
         >
           <span>服务协议</span>
           <u-icon name="arrow-right" color="#D8DBDC" />
@@ -106,7 +76,9 @@
         </div>
       </div>
     </div>
-    <u-button shape="circle" @click="onLogout">退出登录</u-button>
+    <u-button type="primary" shape="circle" @click="onLogout">
+      退出登录
+    </u-button>
   </div>
 </template>
 
@@ -124,7 +96,7 @@ export default {
         uni.clearStorageSync();
         this.toast("缓存清除成功");
       } else {
-        this.navTo(`/pages/me/info?type=${key}`);
+        this.navTo(`/pages/me/common?type=${key}`);
       }
     },
     onLogout() {

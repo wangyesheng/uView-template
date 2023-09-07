@@ -17,7 +17,14 @@ const request = ({ url, method, payload = {} }) => {
         Vue.prototype.$u.toast("凭证过期，请重新授权");
         uni.setStorageSync("APP_USER", {});
       } else {
-        Vue.prototype.$u.toast(errerData.msg);
+        // Vue.prototype.$u.toast(errerData.msg, 300000);
+        uni.showModal({
+          title: "提示",
+          content: errerData.msg,
+          confirmText: "确定",
+          showCancel: false,
+          success: (res) => {},
+        });
       }
       reject(errerData);
     }

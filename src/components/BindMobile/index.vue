@@ -6,7 +6,7 @@
     <div class="tips">为更好的向您提供服务，申请获取您的手机号！</div>
     <u-button
       shape="circle"
-      type="success"
+      type="primary"
       open-type="getPhoneNumber"
       @getphonenumber="onGetPhoneNumber"
     >
@@ -36,12 +36,14 @@ export default {
   },
 
   methods: {
-    async onGetPhoneNumber({ detail: { encryptedData: encrypted_data, iv } }) {
+    async onGetPhoneNumber(response) {
+      const {
+        detail: { encryptedData: encrypted_data, iv },
+      } = response;
       const { data, openid } = await decryUserPhoneRes({
         encrypted_data,
         iv,
         code: this.userProfile.code,
-        group_id: 3,
       });
       await this.checkLogin(JSON.parse(data), openid);
     },
@@ -51,20 +53,10 @@ export default {
         nickname: this.userProfile.current.nickName,
         avatar: this.userProfile.current.avatarUrl,
         mobile: phoneInfo.phoneNumber,
-        group_id: 3, // 员工端
       };
       const { userinfo } = await checkLoginRes(reqData);
-      const appUser = {
-        ...userinfo,
-        role:
-          userinfo.group_id == 1
-            ? "游客"
-            : userinfo.group_id == 2
-            ? "员工"
-            : "驾驶员",
-      };
-      uni.setStorageSync("APP_USER", appUser);
-      this.$emit("getUser", appUser);
+      uni.setStorageSync("APP_USER", userinfo);
+      this.$emit("getUser", userinfo);
       this.$emit("input", false);
     },
   },

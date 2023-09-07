@@ -1,0 +1,21 @@
+page {
+  background: #f7f8fa;
+
+  .__wrap {
+    u-steps {
+      .u-line {
+        border-bottom-style: dashed !important;
+      }
+      .u-steps__item__text--row {
+        color: #363636 !important;
+      }
+    }
+  }
+  ::v-deep {
+    .locationpicker-page {
+      .btn-location {
+        background: #75e3de !important;
+      }
+    }
+  }
+}

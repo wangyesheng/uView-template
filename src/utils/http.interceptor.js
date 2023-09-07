@@ -1,6 +1,6 @@
 const install = (Vue, vm) => {
   Vue.prototype.$u.http.setConfig({
-    baseUrl: "https://zhonghai.tuomuit.com",
+    baseUrl: "https://cxp.tuomuit.com",
     showLoading: false,
   });
 
