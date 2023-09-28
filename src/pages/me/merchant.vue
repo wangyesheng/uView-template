@@ -255,7 +255,7 @@
       提交审核
     </u-button>
     <u-picker
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       v-model="regionVisible"
       mode="region"
       @confirm="onRegionConfirm"

@@ -164,7 +164,7 @@ export default {
         width: 10rpx;
         height: 10rpx;
         border-radius: 50%;
-        background: #75e3de;
+        background: #49d2b2;
         margin-right: 30rpx;
       }
 

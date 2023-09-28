@@ -63,8 +63,7 @@
     {
       "path": "pages/route/preview",
       "style": {
-        "navigationBarTitleText": "行程",
-        "navigationStyle": "custom"
+        "navigationBarTitleText": "行程追踪"
       }
     },
     {

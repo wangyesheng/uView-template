@@ -46,7 +46,7 @@
         }
 
         &.start::before {
-          background: #75e3de;
+          background: #49d2b2;
         }
 
         &.end::before {
@@ -424,7 +424,7 @@
     </u-button>
 
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       mode="mutil-column-auto"
       :default-value="petTypeSelect.defaultValue"
       :list="petTypeSelect.data"
@@ -432,42 +432,42 @@
       @confirm="onPetTypeConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="petWeightSelect.defaultValue"
       :list="petWeightSelect.data"
       v-model="petWeightSelect.visible"
       @confirm="onPetWeightConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="insureSelect.defaultValue"
       :list="insureSelect.data"
       v-model="insureSelect.visible"
       @confirm="onInsureConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="checkTypeSelect.defaultValue"
       :list="checkTypeSelect.data"
       v-model="checkTypeSelect.visible"
       @confirm="onCheckTypeConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="haveCageSelect.defaultValue"
       :list="haveCageSelect.data"
       v-model="haveCageSelect.visible"
       @confirm="onHaveCageConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="buyCageSelect.defaultValue"
       :list="buyCageSelect.data"
       v-model="buyCageSelect.visible"
       @confirm="onBuyCageConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="cageCategorySelect.defaultValue"
       :list="cageCategorySelect.data"
       v-model="cageCategorySelect.visible"
@@ -476,35 +476,35 @@
     <u-calendar
       mode="date"
       max-date="2099-01-01"
-      active-bg-color="#75e3de"
+      active-bg-color="#49d2b2"
       :default-date="formData._startDate"
       :min-date="departureCalendar.minDate"
       v-model="departureCalendar.visible"
       @change="onDepartureCalendarConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="homeStartSelect.defaultValue"
       :list="homeStartSelect.data"
       v-model="homeStartSelect.visible"
       @confirm="(e) => onHomeConfirm('start', e)"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="homeArriveSelect.defaultValue"
       :list="homeArriveSelect.data"
       v-model="homeArriveSelect.visible"
       @confirm="(e) => onHomeConfirm('arrive', e)"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="cageSizeSelect.defaultValue"
       :list="cageSizeSelect.data"
       v-model="cageSizeSelect.visible"
       @confirm="onCageSizeSelectConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="petNumSelect.defaultValue"
       :list="petNumSelect.data"
       v-model="petNumSelect.visible"

@@ -146,7 +146,7 @@
             margin-right: 20rpx;
           }
           span:last-child {
-            color: #75e3de;
+            color: #49d2b2;
           }
         }
 

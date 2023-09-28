@@ -18,6 +18,10 @@
       .u-tab-bar {
         background-color: #49d2b2 !important;
       }
+
+      .u-tab-item {
+        font-weight: 550;
+      }
     }
 
     u-popup {
@@ -42,11 +46,11 @@
       background: linear-gradient(
         180deg,
         #99fff2 0%,
-        #feffff 32%,
+        #feffff 18%,
         #ffffff 100%
       );
       border-radius: 30rpx;
-      padding: 30rpx;
+      padding: 30rpx 20rpx;
       box-sizing: border-box;
 
       .alert {
@@ -101,7 +105,7 @@
             line-height: 60rpx;
             text-align: center;
             border-radius: 50%;
-            background: #75e3de;
+            background: #49d2b2;
             color: #fff;
           }
 
@@ -146,7 +150,8 @@
       }
 
       .simple-station {
-        padding: 30rpx 0 20rpx;
+        padding-top: 10rpx;
+        padding-bottom: 20rpx;
         border-bottom: 2rpx solid #eff1f5;
         font-size: 40rpx;
         font-weight: bold;
@@ -155,9 +160,34 @@
         justify-content: space-between;
         align-items: center;
 
+        div {
+          width: 45%;
+          &:first-child {
+            text-align: left;
+          }
+          &:last-child {
+            text-align: right;
+          }
+          &.none {
+            color: #6e757a;
+          }
+        }
+
         img {
           width: 36rpx;
           height: 36rpx;
+        }
+
+        span {
+          display: inline-block;
+          width: 60rpx;
+          height: 60rpx;
+          line-height: 60rpx;
+          background: #49d2b2;
+          text-align: center;
+          font-size: 28rpx;
+          color: #fff;
+          border-radius: 50%;
         }
       }
 
@@ -177,8 +207,8 @@
 
             &__label {
               margin-left: 0;
-              font-size: 24rpx;
-              font-weight: 400;
+              font-size: 26rpx;
+              font-weight: bold;
               color: #3c3c3c;
             }
           }
@@ -188,25 +218,66 @@
       .date {
         margin-top: 26rpx;
         color: #3c3c3c;
-        span:first-child {
-          font-size: 32rpx;
-          font-weight: bold;
-          margin-right: 12rpx;
+        padding-bottom: 20rpx;
+        border-bottom: 2rpx solid #eff1f5;
+        .right {
+          span:first-child {
+            font-size: 32rpx;
+            margin-right: 12rpx;
+            color: #303133;
+          }
+          span:last-child {
+            font-size: 26rpx;
+            font-weight: 400;
+            color: #303133;
+          }
         }
-        span:last-child {
-          font-size: 24rpx;
-          font-weight: 400;
+      }
+    }
+    &-pannel {
+      padding: 10rpx;
+      box-sizing: border-box;
+    }
+
+    .insurance-inner,
+    .cageSize,
+    .date {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .left {
+        font-size: 26rpx;
+        font-weight: bold;
+        color: #3c3c3c;
+      }
+      .right {
+        flex: 1;
+        text-align: right;
+        span {
+          margin-right: 10rpx;
         }
       }
     }
 
-    &-form {
-      padding: 40rpx 20rpx;
+    .insurance {
+      margin-top: 26rpx;
+      & > div:last-child {
+        font-size: 24rpx;
+        font-weight: 400;
+        color: #ff670b;
+        margin-top: 10rpx;
+      }
+    }
+
+    .cageSize {
+      padding: 26rpx 10rpx 20rpx;
       box-sizing: border-box;
+      border-bottom: 2rpx solid #eff1f5;
+    }
+
+    &-form {
       margin-top: 20rpx;
-      width: 100%;
-      background: #ffffff;
-      border-radius: 16rpx;
 
       ::v-deep {
         .u-form {
@@ -219,6 +290,9 @@
           }
           .u-input {
             padding: 6rpx 30rpx !important;
+            input {
+              font-weight: 550;
+            }
           }
 
           .u-border-bottom:after {
@@ -239,7 +313,7 @@
               &__label {
                 margin-right: 10rpx;
                 margin-left: 40rpx;
-                font-size: 28rpx;
+                font-size: 26rpx;
                 font-weight: bold;
                 color: #3c3c3c;
               }
@@ -274,9 +348,11 @@
         justify-content: space-between;
         padding: 0 10rpx;
         box-sizing: border-box;
-        font-size: 28rpx;
+        font-size: 26rpx;
         font-weight: bold;
         color: #3c3c3c;
+        padding-bottom: 20rpx;
+        border-bottom: 2rpx solid #eff1f5;
 
         ::v-deep {
           .u-radio {
@@ -285,50 +361,12 @@
             &__label {
               margin-right: 10rpx;
               margin-left: 40rpx;
-              font-size: 28rpx;
+              font-size: 26rpx;
               font-weight: bold;
               color: #3c3c3c;
             }
           }
         }
-      }
-
-      .insurance-inner,
-      .cageSize {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .left {
-          font-size: 28rpx;
-          font-weight: bold;
-          color: #3c3c3c;
-        }
-        .right {
-          flex: 1;
-          text-align: right;
-          span {
-            margin-right: 10rpx;
-          }
-        }
-      }
-
-      .insurance {
-        padding: 30rpx 10rpx 0;
-        box-sizing: border-box;
-        & > div:last-child {
-          font-size: 24rpx;
-          font-weight: 400;
-          color: #ff670b;
-          margin-top: 10rpx;
-        }
-      }
-
-      .cageSize {
-        padding: 30rpx 10rpx 0;
-        box-sizing: border-box;
-        padding-bottom: 20rpx;
-        border-bottom: 2rpx solid #eff1f5;
       }
     }
 
@@ -340,7 +378,7 @@
       padding: 30rpx;
       box-sizing: border-box;
       .__label {
-        font-size: 28rpx;
+        font-size: 26rpx;
         font-weight: bold;
         color: #3c3c3c;
         margin-bottom: 30rpx;
@@ -472,178 +510,167 @@
           :current="activeCheckType"
           @change="onActiveCheckTypeChange"
         />
-        <!-- <div class="station">
-          <div class="start" @click="onNavToChooseLocation('origin')">
-            <div class="sign">起</div>
-            <div class="address" v-if="originLocation.province">
-              <span>
-                {{ originLocation.name }}
-              </span>
-              <span>{{ originLocation.address }}</span>
-            </div>
-            <div class="addressTips" v-else>请选择宠物出发地址</div>
-            <u-icon name="arrow-right" color="#6e757a" />
-          </div>
-          <div class="end" @click="onNavToChooseLocation('arrived')">
-            <div class="sign">终</div>
-            <div class="address" v-if="arrivedLocation.province">
-              <span>
-                {{ arrivedLocation.name }}
-              </span>
-              <span>{{ arrivedLocation.address }}</span>
-            </div>
-            <div class="addressTips" v-else>请选择宠物送达地址</div>
-            <u-icon name="arrow-right" color="#6e757a" />
-          </div>
-        </div> -->
-
-        <div class="simple-station">
-          <div class="left" @click="onNavToChooseLocation('origin')">
-            {{ originLocation.city || "" }}
-          </div>
-          <img
-            src="../../static/images/transform.png"
-            alt=""
-            @click="onTransfromLocation"
-          />
-          <div class="right" @click="onNavToChooseLocation('arrived')">
-            {{ arrivedLocation.city || "" }}
-          </div>
-        </div>
-
-        <u-checkbox-group class="petMethods" @change="onPetCheckboxGroupChange">
-          <u-checkbox
-            shape="circle"
-            active-color="#68D279"
-            v-model="item.checked"
-            v-for="(item, index) in petMethodOptions"
-            :key="index"
-            :name="item.name"
+        <div class="home-content-form">
+          <u-form
+            ref="uForm"
+            :border-bottom="false"
+            :error-type="['toast']"
+            :model="formData"
           >
-            {{ item.label }}
-          </u-checkbox>
-        </u-checkbox-group>
-        <div class="date" @click="() => (departureCalendar.visible = true)">
-          <span>{{ departureCalendar.selectedDate.result }}</span>
-          <span>{{ departureCalendar.selectedDate.week }}</span>
-        </div>
-      </div>
-      <div class="home-content-form">
-        <u-form
-          ref="uForm"
-          :border-bottom="false"
-          :error-type="['toast']"
-          :model="formData"
-        >
-          <u-row :gutter="20">
-            <u-col :span="6">
-              <u-form-item>
-                <u-input
-                  border
-                  placeholder="宠物名字"
-                  v-model="formData.pet_name"
-                  :clearable="false"
-                />
-              </u-form-item>
-            </u-col>
-            <u-col :span="6">
-              <u-form-item required prop="pet_category">
-                <u-input
-                  border
-                  type="select"
-                  placeholder="宠物品种"
-                  :clearable="false"
-                  v-model="formData.pet_category"
-                  @click="onShowSelect('petTypeSelect')"
-                />
-              </u-form-item>
-            </u-col>
-          </u-row>
-          <u-row :gutter="20">
-            <u-col :span="6">
-              <u-form-item required prop="_pet_number">
-                <u-input
-                  border
-                  type="select"
-                  placeholder="宠物数量"
-                  v-model="formData._pet_number"
-                  @click="onShowSelect('petNumSelect')"
-                />
-              </u-form-item>
-            </u-col>
-            <u-col :span="6">
-              <u-form-item required prop="pet_weight">
-                <u-input
-                  border
-                  type="select"
-                  placeholder="宠物重量"
-                  v-model="formData.pet_weight"
-                  @click="onShowSelect('petWeightSelect')"
-                />
-              </u-form-item>
-            </u-col>
-          </u-row>
-          <u-row :gutter="20">
-            <u-col :span="6">
-              <u-form-item required prop="_cage_have">
-                <u-input
-                  border
-                  type="select"
-                  placeholder="是否有笼具"
-                  v-model="formData._cage_have"
-                  @click="onShowSelect('haveCageSelect')"
-                />
-              </u-form-item>
-            </u-col>
-            <u-col :span="6">
-              <u-form-item>
-                <u-input
-                  border
-                  type="select"
-                  placeholder="笼具尺寸"
-                  v-model="formData.cage_size"
-                  @click="onShowSelect('cageSizeSelect')"
-                />
-              </u-form-item>
-            </u-col>
-          </u-row>
-        </u-form>
-        <div
-          class="buyCages"
-          v-if="formData.cage_have == 0 && formData.cage_have !== null"
-        >
-          <span>是否代买笼具</span>
-          <u-radio-group v-model="formData.is_buy_cage">
-            <u-radio
-              v-for="(item, index) in radioOptions"
-              :key="index"
-              :name="item.name"
-              active-color="#68D279"
-            >
-              {{ item.label }}
-            </u-radio>
-          </u-radio-group>
-        </div>
-        <div class="cageSize" v-if="formData.is_buy_cage">
-          <div class="left">笼具类型</div>
-          <div class="right" @click="onShowSelect('cageSelect')">
-            <span>{{ formData.cage_category || "请选择" }}</span>
-            <u-icon name="arrow-down" color="#6e757a" />
+            <u-row :gutter="20">
+              <u-col :span="6">
+                <u-form-item>
+                  <u-input
+                    border
+                    placeholder="宠物名字"
+                    v-model="formData.pet_name"
+                    :clearable="false"
+                  />
+                </u-form-item>
+              </u-col>
+              <u-col :span="6">
+                <u-form-item required prop="pet_category">
+                  <u-input
+                    border
+                    type="select"
+                    placeholder="宠物品种"
+                    :clearable="false"
+                    v-model="formData.pet_category"
+                    @click="onShowSelect('petTypeSelect')"
+                  />
+                </u-form-item>
+              </u-col>
+            </u-row>
+            <u-row :gutter="20">
+              <u-col :span="6">
+                <u-form-item required prop="_pet_number">
+                  <u-input
+                    border
+                    type="select"
+                    placeholder="宠物数量"
+                    v-model="formData._pet_number"
+                    @click="onShowSelect('petNumSelect')"
+                  />
+                </u-form-item>
+              </u-col>
+              <u-col :span="6">
+                <u-form-item required prop="pet_weight">
+                  <u-input
+                    border
+                    type="select"
+                    placeholder="宠物重量"
+                    v-model="formData.pet_weight"
+                    @click="onShowSelect('petWeightSelect')"
+                  />
+                </u-form-item>
+              </u-col>
+            </u-row>
+            <u-row :gutter="20">
+              <u-col :span="6">
+                <u-form-item required prop="_cage_have">
+                  <u-input
+                    border
+                    type="select"
+                    placeholder="是否有笼具"
+                    v-model="formData._cage_have"
+                    @click="onShowSelect('haveCageSelect')"
+                  />
+                </u-form-item>
+              </u-col>
+              <u-col :span="6">
+                <u-form-item>
+                  <u-input
+                    border
+                    type="select"
+                    placeholder="笼具尺寸"
+                    v-model="formData.cage_size"
+                    @click="onShowSelect('cageSizeSelect')"
+                  />
+                </u-form-item>
+              </u-col>
+            </u-row>
+          </u-form>
+          <div
+            class="buyCages"
+            v-if="formData.cage_have == 0 && formData.cage_have !== null"
+          >
+            <span>是否代买笼具</span>
+            <u-radio-group v-model="formData.is_buy_cage">
+              <u-radio
+                v-for="(item, index) in radioOptions"
+                :key="index"
+                :name="item.name"
+                active-color="#49d2b2"
+              >
+                {{ item.label }}
+              </u-radio>
+            </u-radio-group>
           </div>
-        </div>
-        <div class="insurance">
-          <div class="insurance-inner">
-            <div class="left">
-              <span>选择保险</span>
-            </div>
-            <div class="right" @click="onShowSelect('insureSelect')">
-              <span>{{ formData._insure_name }}</span>
+          <div class="cageSize" v-if="formData.is_buy_cage">
+            <div class="left">笼具类型</div>
+            <div class="right" @click="onShowSelect('cageSelect')">
+              <span>{{ formData.cage_category || "请选择" }}</span>
               <u-icon name="arrow-down" color="#6e757a" />
             </div>
           </div>
-          <div @click="onShowInsurePopup">查看相关保单条款</div>
+        </div>
+        <div class="home-content-pannel">
+          <div class="simple-station">
+            <div class="left" @click="onNavToChooseLocation('origin')">
+              {{ originLocation.city || "" }}
+            </div>
+            <!-- <img
+            src="../../static/images/transform.png"
+            alt=""
+            @click="onTransfromLocation"
+          /> -->
+            <span>到</span>
+            <div
+              :class="['right', arrivedLocation.city ? '' : 'none']"
+              @click="onNavToChooseLocation('arrived')"
+            >
+              {{ arrivedLocation.city || "请选择目的地" }}
+            </div>
+          </div>
+          <u-checkbox-group
+            class="petMethods"
+            @change="onPetCheckboxGroupChange"
+          >
+            <u-checkbox
+              shape="circle"
+              active-color="#49d2b2"
+              v-model="item.checked"
+              v-for="(item, index) in petMethodOptions"
+              :key="index"
+              :name="item.name"
+            >
+              {{ item.label }}
+            </u-checkbox>
+          </u-checkbox-group>
+          <div class="date" @click="() => (departureCalendar.visible = true)">
+            <div class="left">
+              <span class="none">请选择出发时间</span>
+            </div>
+            <div class="right" v-if="departureCalendar.selectedDate.result">
+              <span>{{ departureCalendar.selectedDate.result }}</span>
+              <span>{{ departureCalendar.selectedDate.week }}</span>
+            </div>
+          </div>
+          <div class="insurance">
+            <div class="insurance-inner">
+              <div class="left">
+                <span>选择保险</span>
+              </div>
+              <div class="right" @click="onShowSelect('insureSelect')">
+                <span>{{ formData._insure_name }}</span>
+                <u-icon name="arrow-down" color="#6e757a" />
+              </div>
+            </div>
+            <div @click="onShowInsurePopup">查看相关保单条款</div>
+          </div>
         </div>
       </div>
+
       <div class="home-content-extra">
         <div class="takephoto">
           <h3 class="__label">宠物照片</h3>
@@ -731,13 +758,13 @@
     <u-calendar
       mode="date"
       max-date="2099-01-01"
-      active-bg-color="#75e3de"
+      active-bg-color="#49d2b2"
       :min-date="departureCalendar.minDate"
       v-model="departureCalendar.visible"
       @change="onDepartureCalendarConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       mode="mutil-column-auto"
       :default-value="petTypeSelect.defaultValue"
       :list="petTypeSelect.data"
@@ -745,42 +772,42 @@
       @confirm="onPetTypeConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="petWeightSelect.defaultValue"
       :list="petWeightSelect.data"
       v-model="petWeightSelect.visible"
       @confirm="onPetWeightConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="insureSelect.defaultValue"
       :list="insureSelect.data"
       v-model="insureSelect.visible"
       @confirm="onInsureConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="cageSelect.defaultValue"
       :list="cageSelect.data"
       v-model="cageSelect.visible"
       @confirm="onCageConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="haveCageSelect.defaultValue"
       :list="haveCageSelect.data"
       v-model="haveCageSelect.visible"
       @confirm="onHaveCageConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="cageSizeSelect.defaultValue"
       :list="cageSizeSelect.data"
       v-model="cageSizeSelect.visible"
       @confirm="onCageSizeSelectConfirm"
     />
     <u-select
-      confirm-color="#75e3de"
+      confirm-color="#49d2b2"
       :default-value="petNumSelect.defaultValue"
       :list="petNumSelect.data"
       v-model="petNumSelect.visible"
@@ -918,14 +945,14 @@ export default {
         visible: false,
         minDate: dayjs().format("YYYY-MM-DD"),
         selectedDate: {
-          result: dayjs().format("YYYY-MM-DD"),
-          week: weekMap[dayjs().day()],
+          result: "",
+          week: "",
         },
       },
       formData: {
         is_home_start: 1, // 上门接宠
         is_home_arrive: 1, // 上门送宠
-        start_date: dayjs().format("YYYY-MM-DD"),
+        start_date: "",
         pet_name: null,
         pet_category: null,
         pet_number: null,
@@ -1137,10 +1164,15 @@ export default {
             check_type,
           } = this.formData;
 
+          if (!arrive_lat && !arrive_lng) {
+            return this.toast("请选择目的地");
+          }
+          if (!start_date) {
+            return this.toast("请选择出发时间");
+          }
           if (cage_have && !cage_size) {
             return this.toast("请选择笼具尺寸");
           }
-
           if (is_buy_cage && !cage_category) {
             return this.toast("请选择笼具类型");
           }
@@ -1195,7 +1227,7 @@ export default {
       this.formData = {
         is_home_start: 1, // 上门接宠
         is_home_arrive: 1, // 上门送宠
-        start_date: dayjs().format("YYYY-MM-DD"),
+        start_date: "",
         pet_name: null,
         pet_category: null,
         pet_number: null,
@@ -1242,12 +1274,12 @@ export default {
       this.cageSizeSelect.defaultValue = [];
       this.petNumSelect.defaultValue = [];
       this.departureCalendar.selectedDate = {
-        result: dayjs().format("YYYY-MM-DD"),
-        week: weekMap[dayjs().day()],
+        result: "",
+        week: "",
       };
       this.petMethodOptions.forEach((x) => (x.checked = true));
-      this.originLocation = this.arrivedLocation =
-        await this.getCurrentLocation();
+      this.originLocation = await this.getCurrentLocation();
+      this.arrivedLocation = {};
     },
     onPreviewImage(index) {
       uni.previewImage({
@@ -1389,8 +1421,20 @@ export default {
     this.getPetTypes();
     this.getInsures();
     this.getCages();
-    this.originLocation = this.arrivedLocation =
-      await this.getCurrentLocation();
+    this.originLocation = await this.getCurrentLocation();
+  },
+  onShareAppMessage() {
+    return {
+      title: "宠物托运宠小皮",
+      path: "/pages/home/index",
+    };
+  },
+
+  onShareTimeline() {
+    return {
+      title: "宠物托运宠小皮",
+      path: "/pages/home/index",
+    };
   },
 };
 </script>

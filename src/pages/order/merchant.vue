@@ -45,7 +45,7 @@
           font-size: 26rpx;
 
           span:last-child {
-            color: #75e3de;
+            color: #49d2b2;
             font-weight: 550;
           }
         }

@@ -255,7 +255,7 @@
     </div>
     <div class="no-data" v-else>
       <img src="../../static/images/nodata-large.png" alt="" />
-      <span>暂无行程数据...</span>
+      <span>宠物开始运输后，展示行程哦~</span>
     </div>
   </div>
 </template>

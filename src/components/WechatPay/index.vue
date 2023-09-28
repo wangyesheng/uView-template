@@ -45,7 +45,7 @@
           margin-right: 20rpx;
         }
         span:last-child {
-          color: #75e3de;
+          color: #49d2b2;
         }
       }
 
@@ -143,7 +143,7 @@
             "
           >
             价格明细
-            <u-icon name="arrow-right" color="#75e3de" size="24" />
+            <u-icon name="arrow-right" color="#49d2b2" size="24" />
           </span>
         </div>
         <div class="bottom">

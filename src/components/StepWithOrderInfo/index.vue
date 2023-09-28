@@ -18,7 +18,7 @@
         content: "";
         width: 6rpx;
         height: 100%;
-        background: #75e3de;
+        background: #49d2b2;
         position: absolute;
         top: 0;
         left: -20rpx;
@@ -55,7 +55,7 @@
           width: 10rpx;
           height: 10rpx;
           border-radius: 50%;
-          background: #75e3de;
+          background: #49d2b2;
           margin-right: 30rpx;
         }
 
@@ -92,7 +92,7 @@
 
     .showMore {
       text-align: center;
-      color: #75e3de;
+      color: #49d2b2;
       span {
         margin-right: 10rpx;
       }
@@ -112,7 +112,7 @@
           color: #333;
         }
         .link {
-          color: #75e3de !important;
+          color: #49d2b2 !important;
         }
       }
 
@@ -148,8 +148,8 @@
   <div class="__wrap">
     <u-steps
       mode="number"
-      active-color="#20D0C8"
-      un-active-color="#20D0C8"
+      active-color="#49d2b2"
+      un-active-color="#49d2b2"
       :list="stpes"
       :current="stepIndex"
     />

@@ -139,95 +139,124 @@
       }
     }
   }
+
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 30vh;
+    box-sizing: border-box;
+    img {
+      width: 196rpx;
+      height: 128rpx;
+    }
+
+    span {
+      color: #6e757a;
+      font-size: 30rpx;
+      margin-top: 50rpx;
+    }
+  }
 }
 </style>
 <template>
   <div class="route-wrap">
-    <div class="map-wrap">
-      <map
-        scale="14"
-        :latitude="centerLocation.lat"
-        :longitude="centerLocation.lng"
-        :markers="markers"
-        :polyline="polyline"
-        @updated="onMapUpdated"
-      />
-    </div>
-    <div class="logistics">
-      <div class="header">
-        <div class="left">
-          <image
-            mode="aspectFill"
-            :src="travelInfo.transportServiceInfo.transport_image"
-            alt=""
-          />
-          <span>{{ travelInfo.transportServiceInfo.transport_nick }}</span>
-        </div>
-        <div
-          class="right"
-          @click="onCallPhone(travelInfo.transportServiceInfo.transport_mobile)"
-        >
-          <u-icon name="phone-fill" color="#00B7AF" size="28" />
-          <span>{{ travelInfo.transportServiceInfo.transport_mobile }}</span>
-        </div>
+    <div class="router-inner" v-if="haveData">
+      <div class="map-wrap">
+        <map
+          scale="14"
+          :latitude="centerLocation.lat"
+          :longitude="centerLocation.lng"
+          :markers="markers"
+          :polyline="polyline"
+          @updated="onMapUpdated"
+        />
       </div>
-      <div class="content">
-        <u-time-line>
-          <u-time-line-item
-            v-for="item in travelInfo.travelTrackList"
-            :key="item.travel_track_id"
+      <div class="logistics">
+        <div class="header">
+          <div class="left">
+            <image
+              mode="aspectFill"
+              :src="travelInfo.transportServiceInfo.transport_image"
+              alt=""
+            />
+            <span>{{ travelInfo.transportServiceInfo.transport_nick }}</span>
+          </div>
+          <div
+            class="right"
+            @click="
+              onCallPhone(travelInfo.transportServiceInfo.transport_mobile)
+            "
           >
-            s<template v-slot:node>
-              <view class="customNode" />
-            </template>
-            <template v-slot:content>
-              <view>
-                <view class="travel-title">
-                  <span>{{ item.track_title }}</span>
-                  <span>{{ item.track_time }}</span>
-                </view>
-                <div class="travel-attr">
-                  <div class="video-and-img">
-                    <image
-                      v-if="item.attr.message_video"
-                      class="videoImg"
-                      mode="aspectFill"
-                      src="../../static/images/video.png"
-                      @click="onShowVideoPopup(item.attr.message_video)"
-                    />
-                    <template v-if="item.attr.message_pic">
+            <u-icon name="phone-fill" color="#00B7AF" size="28" />
+            <span>{{ travelInfo.transportServiceInfo.transport_mobile }}</span>
+          </div>
+        </div>
+        <div class="content">
+          <u-time-line>
+            <u-time-line-item
+              v-for="item in travelInfo.travelTrackList"
+              :key="item.travel_track_id"
+            >
+              s<template v-slot:node>
+                <view class="customNode" />
+              </template>
+              <template v-slot:content>
+                <view>
+                  <view class="travel-title">
+                    <span>{{ item.track_title }}</span>
+                    <span>{{ item.track_time }}</span>
+                  </view>
+                  <div class="travel-attr">
+                    <div class="video-and-img">
                       <image
-                        class="picImg"
-                        v-for="(url, i) in item.attr.message_pic"
+                        v-if="item.attr.message_video"
+                        class="videoImg"
                         mode="aspectFill"
-                        :src="url"
-                        alt=""
-                        @click="onPreviewImage(item.attr.message_pic, i)"
+                        src="../../static/images/video.png"
+                        @click="onShowVideoPopup(item.attr.message_video)"
                       />
-                    </template>
-                  </div>
+                      <template v-if="item.attr.message_pic">
+                        <image
+                          class="picImg"
+                          v-for="(url, i) in item.attr.message_pic"
+                          mode="aspectFill"
+                          :src="url"
+                          alt=""
+                          @click="onPreviewImage(item.attr.message_pic, i)"
+                        />
+                      </template>
+                    </div>
 
-                  <div
-                    class="track-wrap"
-                    v-if="item.attr.track_rider && item.attr.track_rider_mobile"
-                  >
-                    <span>派送骑手：{{ item.attr.track_rider }}</span>
-                    <span @click="onCallPhone(item.attr.track_rider_mobile)">
-                      电话：{{ item.attr.track_rider_mobile }}
-                    </span>
+                    <div
+                      class="track-wrap"
+                      v-if="
+                        item.attr.track_rider && item.attr.track_rider_mobile
+                      "
+                    >
+                      <span>派送骑手：{{ item.attr.track_rider }}</span>
+                      <span @click="onCallPhone(item.attr.track_rider_mobile)">
+                        电话：{{ item.attr.track_rider_mobile }}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </view>
-            </template>
-          </u-time-line-item>
-        </u-time-line>
+                </view>
+              </template>
+            </u-time-line-item>
+          </u-time-line>
+        </div>
       </div>
+      <u-popup v-model="videoPopup.visible" border-radius="20" mode="center">
+        <div class="videoPopup">
+          <video :src="videoPopup.url" />
+        </div>
+      </u-popup>
     </div>
-    <u-popup v-model="videoPopup.visible" border-radius="20" mode="center">
-      <div class="videoPopup">
-        <video :src="videoPopup.url" />
-      </div>
-    </u-popup>
+    <div class="no-data" v-else>
+      <img src="../../static/images/nodata-large.png" alt="" />
+      <span>宠物开始运输后，展示行程哦~</span>
+    </div>
   </div>
 </template>
 
@@ -241,17 +270,19 @@ export default {
     return {
       markers: [],
       polyline: [],
-      travelInfo: {
-        userOrderInfo: {},
-        travelTrackList: [],
-        transportServiceInfo: {},
-      },
+      travelInfo: {},
       centerLocation: {},
       videoPopup: {
         visible: false,
         url: null,
       },
     };
+  },
+
+  computed: {
+    haveData() {
+      return this.travelInfo && Object.keys(this.travelInfo).length > 0;
+    },
   },
 
   methods: {
@@ -261,73 +292,74 @@ export default {
       });
       try {
         const data = await getTravelInfoRes();
-        this.travelInfo = data;
+        if (data && data.userOrderInfo) {
+          this.travelInfo = data;
+          this.centerLocation = {
+            lat: data.userOrderInfo.arrive_lat,
+            lng: data.userOrderInfo.arrive_lng,
+          };
+          this.markers.push({
+            id: 1,
+            longitude: data.userOrderInfo.start_lng,
+            latitude: data.userOrderInfo.start_lat,
+            name: "起点",
+            iconPath: "../../static/images/startPosition.png",
+            width: "24px",
+            height: "24px",
 
-        this.centerLocation = {
-          lat: data.userOrderInfo.arrive_lat,
-          lng: data.userOrderInfo.arrive_lng,
-        };
-        this.markers.push({
-          id: 1,
-          longitude: data.userOrderInfo.start_lng,
-          latitude: data.userOrderInfo.start_lat,
-          name: "起点",
-          iconPath: "../../static/images/startPosition.png",
-          width: "24px",
-          height: "24px",
+            callout: {
+              content: "（起）" + data.userOrderInfo.start_city,
+              padding: 5,
+              fontSize: 12,
+              textAlign: "center",
+              display: "ALWAYS",
+              borderRadius: 5,
+              border: "none",
+              borderColor: "#fff",
+              color: "#00B7AF",
+            },
+          });
+          this.markers.push({
+            id: 2,
+            longitude: data.userOrderInfo.arrive_lng,
+            latitude: data.userOrderInfo.arrive_lat,
+            name: "终点",
+            iconPath: "../../static/images/endPosition.png",
+            width: "24px",
+            height: "24px",
 
-          callout: {
-            content: "（起）" + data.userOrderInfo.start_city,
-            padding: 5,
-            fontSize: 12,
-            textAlign: "center",
-            display: "ALWAYS",
-            borderRadius: 5,
-            border: "none",
-            borderColor: "#fff",
-            color: "#00B7AF",
-          },
-        });
-        this.markers.push({
-          id: 2,
-          longitude: data.userOrderInfo.arrive_lng,
-          latitude: data.userOrderInfo.arrive_lat,
-          name: "终点",
-          iconPath: "../../static/images/endPosition.png",
-          width: "24px",
-          height: "24px",
+            callout: {
+              content: "（终）" + data.userOrderInfo.arrive_city,
+              padding: 5,
+              fontSize: 12,
+              textAlign: "center",
+              display: "ALWAYS",
+              borderRadius: 5,
+              border: "none",
+              borderColor: "#fff",
+              color: "#fd9656",
+            },
+          });
 
-          callout: {
-            content: "（终）" + data.userOrderInfo.arrive_city,
-            padding: 5,
-            fontSize: 12,
-            textAlign: "center",
-            display: "ALWAYS",
-            borderRadius: 5,
-            border: "none",
-            borderColor: "#fff",
-            color: "#fd9656",
-          },
-        });
-
-        this.polyline = [
-          {
-            points: [
-              {
-                longitude: data.userOrderInfo.arrive_lng,
-                latitude: data.userOrderInfo.arrive_lat,
-              },
-              {
-                longitude: data.userOrderInfo.start_lng,
-                latitude: data.userOrderInfo.start_lat,
-              },
-            ],
-            color: "#00B7AF",
-            width: 2,
-            dottedLine: false,
-            arrowLine: false,
-          },
-        ];
+          this.polyline = [
+            {
+              points: [
+                {
+                  longitude: data.userOrderInfo.arrive_lng,
+                  latitude: data.userOrderInfo.arrive_lat,
+                },
+                {
+                  longitude: data.userOrderInfo.start_lng,
+                  latitude: data.userOrderInfo.start_lat,
+                },
+              ],
+              color: "#00B7AF",
+              width: 2,
+              dottedLine: false,
+              arrowLine: false,
+            },
+          ];
+        }
       } finally {
         uni.hideLoading();
       }
