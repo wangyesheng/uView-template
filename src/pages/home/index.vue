@@ -1217,9 +1217,15 @@ export default {
             reqData.cage_category = cage_category;
             reqData.cage_price = cage_price;
           }
-          const { order_number } = await addOrUpdateOrderRes(reqData);
-          this.resetFields();
-          this.navTo(`/pages/order/merchant?order_number=${order_number}`);
+          try {
+            const { order_number } = await addOrUpdateOrderRes(reqData);
+            this.resetFields();
+            this.navTo(`/pages/order/merchant?order_number=${order_number}`);
+          } catch (error) {
+            if (error && error.code === 401) {
+              this.appUser = {};
+            }
+          }
         }
       });
     },

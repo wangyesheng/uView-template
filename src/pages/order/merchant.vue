@@ -125,13 +125,18 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 26rpx;
+    font-size: 38rpx;
     font-weight: 400;
-    color: #aeb5c4;
+    color: #49d2b2;
     img {
       width: 386rpx;
       height: 298rpx;
       margin-bottom: 20rpx;
+    }
+
+    span {
+      display: inline-block;
+      width: 88%;
     }
   }
 }
@@ -201,7 +206,9 @@
     </div>
     <div class="nodata" v-else>
       <img src="../../static/images/no-merchant.png" alt="" />
-      <span>暂无商家报价</span>
+      <span>
+        您好，暂无系统报价，请稍等1分钟左右，人工为您报价哦！(报价后会短信提示您)
+      </span>
     </div>
   </div>
 </template>
