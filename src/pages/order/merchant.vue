@@ -172,7 +172,7 @@
             </div>
           </div>
           <div class="info">
-            <span>{{ `已提供${item.service_times}次服用` }}</span>
+            <span>{{ `已提供${item.service_times}次服务` }}</span>
             <!-- <span>好评率：95%</span> -->
           </div>
 

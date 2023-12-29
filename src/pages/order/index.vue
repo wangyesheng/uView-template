@@ -215,7 +215,7 @@
               v-if="order.order_status > 1 && order.order_status < 3"
               @click="onRefund(order)"
             >
-              退定金
+              退款
             </u-button>
             <u-button
               plain
@@ -224,7 +224,7 @@
               v-if="order.order_status == 1 && order.is_pay_deposit == 0"
               @click="onNavToOrderDetails(order)"
             >
-              付定金
+              待支付
             </u-button>
             <u-button
               plain
@@ -233,7 +233,7 @@
               v-if="order.order_status == 4 && order.is_pay_balance == 0"
               @click="onNavToOrderDetails(order)"
             >
-              付尾款
+              剩余待付
             </u-button>
             <u-button
               plain
@@ -334,13 +334,13 @@ export default {
       if (order.order_status == 0) {
         status = "待报价";
       } else if (order.order_status == 1) {
-        status = "待付定金";
+        status = "待支付";
       } else if (order.order_status == 2) {
         status = "待商家确认";
       } else if (order.order_status == 3) {
         status = "待商家揽件";
       } else if (order.order_status == 4) {
-        status = "待付尾款";
+        status = "剩余待付";
       } else if (order.order_status == 5) {
         status = "待发货";
       } else if (order.order_status == 6) {
@@ -348,7 +348,7 @@ export default {
       } else if (order.order_status == 7) {
         status = "已完成";
       } else if (order.order_status == 8) {
-        status = "已退定金";
+        status = "已退款";
       } else if (order.order_status == 9) {
         status = "已取消";
       }
@@ -357,7 +357,7 @@ export default {
     async onRefund(order) {
       uni.showModal({
         title: "提示",
-        content: "确定要退定金吗？",
+        content: "确定要退款吗？",
         confirmText: "确定",
         success: async ({ confirm }) => {
           if (confirm) {

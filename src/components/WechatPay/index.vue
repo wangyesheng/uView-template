@@ -147,7 +147,7 @@
           </span>
         </div>
         <div class="bottom">
-          <span>{{ protocol ? "需付定金" : "剩余待付" }}</span>
+          <span>{{ protocol ? "下单支付" : "剩余待付" }}</span>
           <span>
             ¥ {{ protocol ? price.deposit_price : price.final_price }}
           </span>
@@ -174,7 +174,7 @@
             <span>¥{{ price.cage_price }}</span>
           </div>
           <div>
-            <span>商家定金：</span>
+            <span>托运费用：</span>
             <span>¥{{ price.deposit_price }}</span>
           </div>
           <div>

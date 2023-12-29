@@ -280,6 +280,11 @@
       margin-top: 20rpx;
 
       ::v-deep {
+        .cageSizeFormItem {
+          .u-form-item {
+            margin-bottom: 0 !important;
+          }
+        }
         .u-form {
           &-item {
             padding: 0 !important;
@@ -338,6 +343,11 @@
             .u-input {
               margin-left: 10rpx;
             }
+          }
+
+          .cageSizeTips {
+            color: #ff0000;
+            font-size: 20rpx;
           }
         }
       }
@@ -578,7 +588,7 @@
                 </u-form-item>
               </u-col>
               <u-col :span="6">
-                <u-form-item>
+                <u-form-item class="cageSizeFormItem">
                   <u-input
                     border
                     type="select"
@@ -586,6 +596,7 @@
                     v-model="formData.cage_size"
                     @click="onShowSelect('cageSizeSelect')"
                   />
+                  <div class="cageSizeTips">* 请选择合适尺寸，大笼具费用高</div>
                 </u-form-item>
               </u-col>
             </u-row>
@@ -713,7 +724,12 @@
         </div>
         <div class="remark">
           <h3 class="__label">备注内容</h3>
-          <u-input type="textarea" border v-model="formData.notes" />
+          <u-input
+            border
+            type="textarea"
+            placeholder="您可以备注：起点电话、目的地电话等 提醒信息。"
+            v-model="formData.notes"
+          />
         </div>
       </div>
       <div class="home-content-attr">
@@ -894,12 +910,12 @@ export default {
       petMethodOptions: [
         {
           name: "home_start",
-          label: "是否上门接宠",
+          label: "是否小区接宠",
           checked: true,
         },
         {
           name: "home_arrive",
-          label: "是否送宠到家",
+          label: "是否小区送宠",
           checked: true,
         },
       ],
@@ -930,7 +946,7 @@ export default {
       cageSizeSelect: {
         visible: false,
         data: [
-          { label: "60cm以下", value: 0 },
+          { label: "60cm以下(含3号航空箱)", value: 0 },
           { label: "60-75cm", value: 1 },
           { label: "75-85cm", value: 2 },
           { label: "85-95cm", value: 3 },
@@ -1084,17 +1100,18 @@ export default {
         success: ({ latitude, longitude, address, name }) => {
           this.$qqmapsdk.reverseGeocoder({
             location: `${latitude},${longitude}`,
-            success: ({
-              result: {
-                ad_info: { nation, province, city, district },
-              },
-            }) => {
+            success: (response) => {
+              const {
+                result: {
+                  ad_info: { nation, province, city, district },
+                },
+              } = response;
               if (type === "origin") {
                 this.originLocation = {
                   nation,
                   province,
                   city,
-                  district,
+                  district: district || city,
                   address,
                   name,
                   longitude,
@@ -1105,7 +1122,7 @@ export default {
                   nation,
                   province,
                   city,
-                  district,
+                  district: district || city,
                   address,
                   name,
                   longitude,

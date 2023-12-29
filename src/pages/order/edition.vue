@@ -610,7 +610,7 @@ export default {
       cageSizeSelect: {
         visible: false,
         data: [
-          { label: "60cm以下", value: 0 },
+          { label: "60cm以下(含3号航空箱)", value: 0 },
           { label: "60-75cm", value: 1 },
           { label: "75-85cm", value: 2 },
           { label: "85-95cm", value: 3 },
@@ -750,7 +750,7 @@ export default {
                   nation,
                   province,
                   city,
-                  district,
+                  district: district || city,
                   address,
                   name,
                   longitude,
@@ -761,7 +761,7 @@ export default {
                   nation,
                   province,
                   city,
-                  district,
+                  district: district || city,
                   address,
                   name,
                   longitude,

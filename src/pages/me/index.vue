@@ -124,7 +124,7 @@
         }
 
         span {
-          font-size: 28rpx;
+          font-size: 36rpx;
           font-weight: bold;
           color: #373741;
         }
@@ -263,11 +263,14 @@
           class="merchant"
           hover-class="merchant-hover"
           hover-stay-time="150"
-          @click="onBeMerchant"
+          @click="onToQuestion"
         >
           <div class="left">
-            <img :src="require(`@/static/images/me/merchant.png`)" alt="" />
-            <span>成为商家</span>
+            <img
+              :src="require(`@/static/images/me/icon-question.png`)"
+              alt=""
+            />
+            <span>常见问题</span>
           </div>
           <u-icon name="arrow-right" color="#D8DBDC" />
         </div>
@@ -362,8 +365,8 @@ export default {
       ],
       functions: [
         {
-          icon: "question",
-          label: "常见问题",
+          icon: "merchant",
+          label: "成为商家",
         },
         {
           icon: "customer-service",
@@ -393,8 +396,13 @@ export default {
         case "setting":
           this.navTo("/pages/me/setting");
           break;
-        case "question":
-          this.navTo("/pages/me/common?type=3");
+        case "merchant":
+          const data = await getMerchantReviewStatusRes();
+          if (data && data.apply_id) {
+            this.navTo(`/pages/me/review-result?data=${JSON.stringify(data)}`);
+          } else {
+            this.navTo("/pages/me/merchant");
+          }
           break;
         case "customer-service":
           const phoneNumber = await getServiceMobileRes();
@@ -405,13 +413,8 @@ export default {
           break;
       }
     },
-    async onBeMerchant() {
-      const data = await getMerchantReviewStatusRes();
-      if (data && data.apply_id) {
-        this.navTo(`/pages/me/review-result?data=${JSON.stringify(data)}`);
-      } else {
-        this.navTo("/pages/me/merchant");
-      }
+    async onToQuestion() {
+      this.navTo("/pages/me/common?type=3");
     },
     async onChooseAvatar(e) {
       const {

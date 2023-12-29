@@ -26,7 +26,7 @@ export default {
                 nation,
                 province,
                 city,
-                district,
+                district: district || city,
                 address: onePois && onePois.address,
                 name: onePois && onePois.title,
                 pois,

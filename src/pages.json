@@ -81,19 +81,19 @@
     {
       "path": "pages/order/merchant",
       "style": {
-        "navigationBarTitleText": "商家报价"
+        "navigationBarTitleText": "选择商家"
       }
     },
     {
       "path": "pages/order/result",
       "style": {
-        "navigationBarTitleText": "订单结果"
+        "navigationBarTitleText": "订单完成"
       }
     },
     {
       "path": "pages/order/pay-deposit",
       "style": {
-        "navigationBarTitleText": "支付定金"
+        "navigationBarTitleText": "下单支付"
       }
     },
     {
@@ -105,13 +105,13 @@
     {
       "path": "pages/order/pay-final",
       "style": {
-        "navigationBarTitleText": "托管尾款"
+        "navigationBarTitleText": "宠物送达"
       }
     },
     {
       "path": "pages/order/ensure",
       "style": {
-        "navigationBarTitleText": "确认行程"
+        "navigationBarTitleText": "商家确认"
       }
     }
   ],
@@ -133,12 +133,7 @@
         "text": "首页",
         "pagePath": "pages/home/index"
       },
-      {
-        "iconPath": "static/images/tabbar/route.png",
-        "selectedIconPath": "static/images/tabbar/route-selected.png",
-        "text": "行程",
-        "pagePath": "pages/route/index"
-      },
+
       {
         "iconPath": "static/images/tabbar/me.png",
         "selectedIconPath": "static/images/tabbar/me-selected.png",

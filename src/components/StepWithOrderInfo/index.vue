@@ -311,16 +311,16 @@ export default {
           name: "选择商家",
         },
         {
-          name: "支付定金",
+          name: "下单支付",
         },
         {
-          name: "确认行程",
+          name: "商家确认",
         },
         {
-          name: "托管尾款",
+          name: "宠物送达",
         },
         {
-          name: "出行送达",
+          name: "订单完成",
         },
       ],
       orderInfo: {},

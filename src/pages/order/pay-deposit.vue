@@ -189,7 +189,7 @@
           />
           <div>
             <span>{{ merchantPrice.transport_name }}</span>
-            <span>支付定金后立刻与商家建立联系</span>
+            <span>支付后立刻与商家建立联系</span>
           </div>
         </div>
         <div class="feat">
@@ -199,7 +199,7 @@
           </div>
           <div class="feat-layer">
             <img src="../../static/images/offer/video.png" alt="" />
-            <span>视频拍摄</span>
+            <span>站点视频</span>
           </div>
           <div class="feat-layer">
             <img src="../../static/images/offer/car.png" alt="" />
